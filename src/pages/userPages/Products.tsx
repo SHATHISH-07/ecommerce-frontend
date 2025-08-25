@@ -1,0 +1,173 @@
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useQuery } from "@apollo/client";
+import { useAppSelector, type RootState } from "../../app/store";
+import {
+  GET_ALL_PRODUCTS,
+  SEARCH_PRODUCTS,
+} from "../../graphql/queries/products.query";
+import { GET_USER_CART } from "../../graphql/queries/cart.query";
+import { type Product } from "../../types/products";
+import LoadingSpinner from "../../components/products/LoadingSpinner";
+import ResponsiveProductCard from "../../components/products/ResponsiveProductCard";
+import CartProductCard from "../../components/products/CartProductCard";
+import { PartyPopper, ShoppingCart } from "lucide-react";
+
+const Products = () => {
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get("search");
+  const LIMIT = 10;
+
+  const navigate = useNavigate();
+
+  const user = useAppSelector((state: RootState) => state.user.user);
+
+  const isSearching = !!searchQuery;
+  const queryToRun = isSearching ? SEARCH_PRODUCTS : GET_ALL_PRODUCTS;
+
+  const variables = {
+    limit: LIMIT,
+    skip: 0,
+    ...(isSearching && { query: searchQuery }),
+  };
+
+  const { data, loading, error, fetchMore } = useQuery(queryToRun, {
+    variables,
+  });
+
+  const {
+    data: cartData,
+    loading: cartLoading,
+    error: cartError,
+  } = useQuery(GET_USER_CART, {
+    fetchPolicy: "network-only",
+    skip: !user,
+  });
+
+  const handleLoadMore = () => {
+    const results = data?.getAllProducts || data?.searchProducts;
+    if (!results) return;
+
+    fetchMore({
+      variables: {
+        skip: results.products.length,
+      },
+      updateQuery: (prevResult, { fetchMoreResult }) => {
+        const dataKey = isSearching ? "searchProducts" : "getAllProducts";
+
+        if (!fetchMoreResult || !fetchMoreResult[dataKey]) {
+          return prevResult;
+        }
+
+        const newProducts = fetchMoreResult[dataKey].products;
+        return {
+          [dataKey]: {
+            ...prevResult[dataKey],
+            products: [...prevResult[dataKey].products, ...newProducts],
+          },
+        };
+      },
+    });
+  };
+
+  if (loading && !data)
+    return (
+      <div className="flex justify-center items-center h-screen ">
+        <LoadingSpinner />
+      </div>
+    );
+  if (error) return <p>Error loading products: {error.message}</p>;
+
+  const results = data?.getAllProducts || data?.searchProducts;
+  const products = results?.products ?? [];
+  const total = results?.total ?? 0;
+
+  const cartProducts = cartData?.getUserCart?.products ?? [];
+
+  return (
+    <div className="flex h-screen">
+      <div className="w-full md:w-[85%] p-4 overflow-y-auto custom-scrollbar">
+        <h1 className="text-3xl dark:text-gray-300 text-gray-800 font-normal ml-2">
+          {isSearching ? `Results for "${searchQuery}"` : "All Products"}
+        </h1>
+        <p className="text-gray-600 dark:text-gray-400 ml-2 mb-4">
+          Check each product page for other buying options.
+        </p>
+
+        {products.length > 0 ? (
+          <>
+            <div className="grid grid-cols-1 [@media(min-width:352px)_and_(max-width:639px)]:grid-cols-2 sm:grid-cols-2 lg:grid-cols-1 gap-2">
+              {products.map((product: Product) => (
+                <ResponsiveProductCard key={product.id} product={product} />
+              ))}
+            </div>
+
+            {products.length < total && (
+              <div className="text-center mt-8 mb-15">
+                <button
+                  onClick={handleLoadMore}
+                  disabled={loading}
+                  className=" text-white px-6 py-2 rounded-lg disabled:bg-gray-400 bg-gradient-to-r from-[#c9812f] to-blue-500 cursor-pointer "
+                >
+                  {loading ? "Loading..." : "Load More"}
+                </button>
+              </div>
+            )}
+          </>
+        ) : (
+          <p>No products found.</p>
+        )}
+      </div>
+
+      <div className="hidden md:block md:w-[15%] p-3 border-l overflow-y-scroll custom-scrollbar dark:border-gray-800">
+        {user && (
+          <div className="flex justify-center gap-3 pb-3">
+            <ShoppingCart size={24} color="#c9812f" />
+            <h3 className="font-semibold text-gray-700 dark:text-gray-300">
+              Your Cart
+            </h3>
+          </div>
+        )}
+        {cartLoading && (
+          <p className="text-sm text-gray-400">Loading cart...</p>
+        )}
+        {cartError && (
+          <p className="text-sm text-red-500">Could not load cart.</p>
+        )}
+
+        {cartProducts.length > 0 ? (
+          <div>
+            {cartProducts.map((item: { productId: number }) => (
+              <CartProductCard
+                key={item.productId}
+                productId={item.productId}
+              />
+            ))}
+            <div className="mt-4 px-2 mb-16">
+              <button
+                onClick={() => navigate("/cart")}
+                className="w-full cursor-pointer rounded-lg  px-4 py-2 text-center font-semibold text-white bg-gradient-to-r from-[#c9812f] to-blue-500"
+              >
+                Go to Cart
+              </button>
+            </div>
+          </div>
+        ) : (
+          !cartLoading && (
+            <div className="flex h-full flex-col items-center justify-center text-center">
+              <PartyPopper
+                size={24}
+                className="text-gray-600 dark:text-gray-400"
+                color="#c9812f"
+              />
+              <p className="text-gray-600 dark:text-gray-400 text-sm mt-2">
+                Your cart is empty.Please Login or Signup to add products.
+              </p>
+            </div>
+          )
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Products;
