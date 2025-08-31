@@ -10,7 +10,7 @@ export const SIGNUP_MUTATION = gql`
 `;
 
 export const VERIFY_EMAIL_OTP = gql`
-  mutation VerifyEmail($email: String!, $otp: String!) {
+  mutation VerifyEmailOtp($email: String!, $otp: String!) {
     verifyEmailOtp(email: $email, otp: $otp) {
       name
       username
@@ -40,3 +40,11 @@ export const LOGIN_MUTATION = gql`
   }
 `;
 
+export const VERIFY_EMAIL_UPDATE_OTP = gql`
+  mutation VerifyEmailUpdateOtp($email: String!, $otp: String!) {
+    verifyEmailUpdateOtp(email: $email, otp: $otp) {
+      email
+      emailVerified
+    }
+  }
+`;

@@ -7,6 +7,7 @@ export interface UserType {
     address?: string;
     country?: string;
     state?: string;
+    userOrderHistory?: UserOrderHistory[];
     city?: string;
     zipCode?: string;
     role: string;
@@ -15,4 +16,10 @@ export interface UserType {
     isBanned: boolean;
     createdAt: string;
     updatedAt: string;
+}
+
+
+interface UserOrderHistory {
+    orderId: string;
+    placedAt: string;
 }

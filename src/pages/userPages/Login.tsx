@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../app/store";
 import { setCurrentUser } from "../../app/slices/userSlice";
 import type { LoginInput } from "../../graphql/types/auth.types";
+import { refetchAndStoreUser } from "../../utils/refetchUser";
 
 const Login = () => {
   const [formData, setFormData] = useState<LoginInput>({
@@ -46,6 +47,8 @@ const Login = () => {
       if (data?.login?.token) {
         localStorage.setItem("token", data.login.token);
         await client.resetStore();
+
+        await refetchAndStoreUser(client, dispatch);
 
         const { data: userData } = await client.query({
           query: GET_CURRENT_USER,

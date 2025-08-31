@@ -1,5 +1,118 @@
+import { useParams, useNavigate } from "react-router-dom";
+import { useQuery } from "@apollo/client";
+import { useAppSelector, type RootState } from "../../app/store";
+import { GET_PRODUCTS_BY_CATEGORY } from "../../graphql/queries/category.query";
+import { GET_USER_CART } from "../../graphql/queries/cart.query";
+import LoadingSpinner from "../../components/products/LoadingSpinner";
+import ResponsiveProductCard from "../../components/products/ResponsiveProductCard";
+import CartProductCard from "../../components/products/CartProductCard";
+import { PartyPopper, ShoppingCart } from "lucide-react";
+import { type Product } from "../../types/products";
+
 const ProductsByCategory = () => {
-  return <div>ProductsByCategory</div>;
+  const { categorySlug } = useParams();
+  const navigate = useNavigate();
+
+  const user = useAppSelector((state: RootState) => state.user.user);
+
+  const { data, loading, error } = useQuery(GET_PRODUCTS_BY_CATEGORY, {
+    variables: { categorySlug },
+    skip: !categorySlug,
+  });
+
+  const {
+    data: cartData,
+    loading: cartLoading,
+    error: cartError,
+  } = useQuery(GET_USER_CART, {
+    fetchPolicy: "network-only",
+    skip: !user,
+  });
+
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <LoadingSpinner />
+      </div>
+    );
+  if (error) return <p>Error loading products: {error.message}</p>;
+
+  const products = data?.getProductsByCategory?.products ?? [];
+  const cartProducts = cartData?.getUserCart?.products ?? [];
+
+  return (
+    <div className="flex h-screen">
+      {/* Left side - Products */}
+      <div className="w-full md:w-[85%] p-4 overflow-y-auto custom-scrollbar">
+        <h1 className="text-3xl dark:text-gray-300 text-gray-800 font-normal ml-2">
+          Products in {categorySlug}
+        </h1>
+        <p className="text-gray-600 dark:text-gray-400 ml-2 mb-4">
+          Browse all products under this category.
+        </p>
+
+        {products.length > 0 ? (
+          <div className="grid grid-cols-1 [@media(min-width:352px)_and_(max-width:639px)]:grid-cols-2 sm:grid-cols-2 lg:grid-cols-1 gap-2">
+            {products.map((product: Product) => (
+              <ResponsiveProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-gray-500">No products found.</p>
+        )}
+      </div>
+
+      {/* Right side - Cart */}
+      <div className="hidden md:block md:w-[15%] p-3 border-l overflow-y-scroll custom-scrollbar dark:border-gray-800">
+        {user && (
+          <div className="flex justify-center gap-3 pb-3">
+            <ShoppingCart size={24} color="#c9812f" />
+            <h3 className="font-semibold text-gray-700 dark:text-gray-300">
+              Your Cart
+            </h3>
+          </div>
+        )}
+        {cartLoading && (
+          <p className="text-sm text-gray-400">Loading cart...</p>
+        )}
+        {cartError && (
+          <p className="text-sm text-red-500">Could not load cart.</p>
+        )}
+
+        {cartProducts.length > 0 ? (
+          <div>
+            {cartProducts.map((item: { productId: number }) => (
+              <CartProductCard
+                key={item.productId}
+                productId={item.productId}
+              />
+            ))}
+            <div className="mt-4 px-2 mb-16">
+              <button
+                onClick={() => navigate("/cart")}
+                className="w-full cursor-pointer rounded-lg px-4 py-2 text-center font-semibold text-white bg-gradient-to-r from-[#c9812f] to-blue-500"
+              >
+                Go to Cart
+              </button>
+            </div>
+          </div>
+        ) : (
+          !cartLoading && (
+            <div className="flex h-full flex-col items-center justify-center text-center">
+              <PartyPopper
+                size={24}
+                className="text-gray-600 dark:text-gray-400"
+                color="#c9812f"
+              />
+              <p className="text-gray-600 dark:text-gray-400 text-sm mt-2">
+                Your cart is empty. Please Login or Signup to add products.
+              </p>
+            </div>
+          )
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default ProductsByCategory;

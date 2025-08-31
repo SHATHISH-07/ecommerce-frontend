@@ -1,5 +1,5 @@
 import { CircleUser, User } from "lucide-react";
-import ProfileHoverModal from "../ProfileHoverModal";
+import ProfileHoverModal from "./ProfileHoverModal";
 import ProfileMenu from "./ProfileMenu";
 import type { UserType } from "../../types/User";
 import { useNavigate } from "react-router-dom";
@@ -18,8 +18,9 @@ const ProfileSection = ({ user }: ProfileSectionProps) => {
           {user ? (
             <>
               <CircleUser size={20} className="mr-1" />
-              <span className="inline">
-                <span className="hidden md:inline">Hi,</span> {user.name}
+              <span className="flex items-center max-w-[150px] overflow-hidden">
+                <span className="hidden md:inline mr-1">Hi,</span>
+                <span className="truncate max-w-[70px]">{user.name}</span>
               </span>
             </>
           ) : (

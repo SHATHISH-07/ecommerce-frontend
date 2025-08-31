@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { ADD_TO_CART } from "../../graphql/mutations/cart";
 import { GET_USER_CART_COUNT } from "../../graphql/queries/cart.query";
+import { useAppToast } from "../../utils/useAppToast";
 
 const DesktopProductCard = ({ product }: { product: Product }) => {
   const [quantity, setQuantity] = useState(1);
@@ -16,6 +17,8 @@ const DesktopProductCard = ({ product }: { product: Product }) => {
   });
 
   const originalPrice = product.price / (1 - product.discountPercentage / 100);
+
+  const { toastCartSuccess, toastError } = useAppToast();
 
   const handleAddToCart = async () => {
     try {
@@ -29,13 +32,13 @@ const DesktopProductCard = ({ product }: { product: Product }) => {
       });
 
       if (data?.addToCart?.success) {
-        alert(data.addToCart.message);
+        toastCartSuccess(data.addToCart.message);
       } else {
-        alert("Failed to add to cart");
+        toastError("Failed to add to cart");
       }
     } catch (err) {
       console.error(err);
-      alert("Error adding to cart");
+      toastError("Error adding to cart");
     }
   };
 

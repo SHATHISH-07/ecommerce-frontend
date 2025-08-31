@@ -65,7 +65,8 @@ const MobileProductCard = ({ product }: { product: Product }) => {
           {/* Rating */}
           <div className="flex items-center gap-3 text-sm text-yellow-500">
             <p className="flex items-center gap-1">
-              {product.rating.toFixed(1)} <Star size={16} fill="yellow" />
+              {product.rating != null ? product.rating.toFixed(1) : "N/A"}{" "}
+              <Star size={16} fill="yellow" />
             </p>
             <div className="flex items-center gap-1 text-sm">
               <div className="flex items-center gap-2 border border-gray-800 dark:border-gray-300 rounded-md px-2 py-1 w-fit">

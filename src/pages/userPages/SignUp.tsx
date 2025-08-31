@@ -3,9 +3,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { SignupInput } from "../../graphql/types/auth.types";
 import { useMutation } from "@apollo/client";
+import { useAppToast } from "../../utils/useAppToast";
 
 const SignUp = () => {
   const navigate = useNavigate();
+
+  const { toastError } = useAppToast();
 
   const [step, setStep] = useState<number>(1);
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -40,12 +43,18 @@ const SignUp = () => {
     e.preventDefault();
     setSuccessMessage(null);
     try {
-      const { data } = await signupMutation({ variables: { input: formData } });
+      const { data } = await signupMutation({
+        variables: { input: formData },
+      });
 
-      if (data?.signup) {
+      // console.log("Signup response:", data);
+
+      if (data?.signup?.success) {
         setSuccessMessage("Account created! Please verify your email.");
         navigate("/verify-email", { state: { email: formData.email } });
         localStorage.setItem("signupEmail", formData.email);
+      } else {
+        toastError("Failed to create account");
       }
     } catch (err) {
       console.error("Signup error:", err);

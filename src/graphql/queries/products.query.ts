@@ -80,3 +80,21 @@ query GetProductById($id: Int!) {
     }
   }
 `
+
+export const GET_PRODUCTS_BY_IDS = gql`
+  query GetProductsByIds($ids: [Int!]!) {
+    getProductsByIds(ids: $ids) {
+        id
+        title
+        description
+        category
+        price
+        discountPercentage
+        rating
+        warrantyInformation  
+        availabilityStatus
+        returnPolicy
+        thumbnail
+    }
+  }
+`

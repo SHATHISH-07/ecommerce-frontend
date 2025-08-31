@@ -264,6 +264,24 @@
   border-radius: inherit;
 }
 
+.avatar-shadow {
+  position: relative;
+  isolation: isolate;
+}
+
+.avatar-shadow::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -2px;
+  bottom: -2px;
+  left: -2px;
+  right: -2px;
+  background: linear-gradient(to right, #d4944a, #477dd4);
+  filter: blur(10px);
+  border-radius: inherit;
+}
+
 .footer-gradient-shadow {
   position: relative;
 }

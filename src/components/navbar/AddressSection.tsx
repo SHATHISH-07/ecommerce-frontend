@@ -1,7 +1,11 @@
-import { useRef } from "react";
-import PopOverModal from "../PopoverModal";
+import { useRef, useState } from "react";
+import PopOverModal from "./PopoverModal";
 import type { UserType } from "../../types/User";
 import { useNavigate } from "react-router-dom";
+import { UPDATE_USER_ADDRESS } from "../../graphql/mutations/user";
+import { useApolloClient, useMutation } from "@apollo/client";
+import { refetchAndStoreUser } from "../../utils/refetchUser";
+import { useAppDispatch } from "../../app/store";
 
 interface AddressSectionProps {
   user: UserType | null;
@@ -15,6 +19,31 @@ const AddressSection = ({
   setIsModalOpen,
 }: AddressSectionProps) => {
   const addressRef = useRef<HTMLDivElement>(null);
+
+  const client = useApolloClient();
+  const dispatch = useAppDispatch();
+
+  const [newAddress, setNewAddress] = useState("");
+
+  const [updateUserAddress, { loading }] = useMutation(UPDATE_USER_ADDRESS);
+
+  const handleChangeAddress = async () => {
+    try {
+      const { data } = await updateUserAddress({
+        variables: {
+          input: {
+            address: newAddress,
+          },
+        },
+      });
+      if (data) {
+        await refetchAndStoreUser(client, dispatch);
+        setNewAddress("");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const navigate = useNavigate();
 
@@ -50,8 +79,20 @@ const AddressSection = ({
             <p className="text-gray-700 dark:text-gray-300 border border-black dark:border-white p-3 rounded-lg mb-6">
               {user.address || "No address set yet."}
             </p>
-            <button className="px-4 py-2 cursor-pointer text-white rounded-md bg-gradient-to-r from-[#c9812f] to-blue-500">
-              Change Address
+
+            <textarea
+              onChange={(e) => setNewAddress(e.target.value)}
+              value={newAddress}
+              placeholder="New address . . ."
+              className="border border-black dark:border-gray-300 rounded-md px-3 py-2 w-full"
+              cols={30}
+              rows={3}
+            ></textarea>
+            <button
+              onClick={handleChangeAddress}
+              className="px-4 py-2 cursor-pointer text-white rounded-md bg-gradient-to-r from-[#c9812f] to-blue-500"
+            >
+              {loading ? "Saving..." : "Save Address"}
             </button>
           </div>
         </PopOverModal>

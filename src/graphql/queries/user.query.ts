@@ -9,6 +9,10 @@ export const GET_CURRENT_USER = gql`
       email
       phone
       emailVerified
+      userOrderHistory{
+        orderId
+        placedAt
+      }
       address
       country
       state
@@ -22,4 +26,6 @@ export const GET_CURRENT_USER = gql`
     }
   }
 `;
+
+
 

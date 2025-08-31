@@ -8,6 +8,7 @@ interface User {
     email: string;
     phone: string;
     address: string;
+    userOrderHistory: UserOrderHistory[];
     country: string;
     state: string;
     city: string;
@@ -18,6 +19,11 @@ interface User {
     isBanned: boolean;
     createdAt: string;
     updatedAt: string;
+}
+
+interface UserOrderHistory {
+    orderId: string;
+    placedAt: string;
 }
 
 interface UserState {

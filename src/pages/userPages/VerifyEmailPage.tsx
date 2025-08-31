@@ -3,6 +3,7 @@ import { useMutation } from "@apollo/client";
 import {
   VERIFY_EMAIL_OTP,
   RESEND_EMAIL_OTP,
+  VERIFY_EMAIL_UPDATE_OTP,
 } from "../../graphql/mutations/auth";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -15,12 +16,21 @@ const VerifyEmail = () => {
     text: string;
   } | null>(null);
 
+  const isSignupFlow = !!localStorage.getItem("signupEmail");
+
   const navigate = useNavigate();
   const location = useLocation();
 
-  const email = location.state?.email || localStorage.getItem("signupEmail");
+  const email =
+    location.state?.email ||
+    localStorage.getItem("verifyEmail") ||
+    localStorage.getItem("signupEmail");
 
-  const [verifyEmailOtp, { loading }] = useMutation(VERIFY_EMAIL_OTP);
+  // Mutations
+  const [verifySignupOtp, { loading }] = useMutation(VERIFY_EMAIL_OTP);
+  const [verifyUpdateOtp, { loading: updateLoading }] = useMutation(
+    VERIFY_EMAIL_UPDATE_OTP
+  );
   const [resendOtp, { loading: resendLoading }] = useMutation(RESEND_EMAIL_OTP);
 
   // Restore cooldown & resend count from localStorage
@@ -55,16 +65,30 @@ const VerifyEmail = () => {
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!email) {
-      setMessage({ type: "error", text: "No email found for verification." });
-      return;
-    }
-
     try {
-      const { data } = await verifyEmailOtp({ variables: { email, otp } });
+      let data;
 
-      if (data?.verifyEmailOtp) {
+      if (isSignupFlow) {
+        if (!email) {
+          setMessage({
+            type: "error",
+            text: "No email found for verification.",
+          });
+          return;
+        }
+        const res = await verifySignupOtp({ variables: { email, otp } });
+        data = res.data;
+      } else {
+        const res = await verifyUpdateOtp({ variables: { email, otp } });
+        data = res.data;
+      }
+
+      if (
+        (isSignupFlow && data?.verifyEmailOtp) ||
+        (!isSignupFlow && data?.verifyEmailUpdateOtp)
+      ) {
         localStorage.removeItem("signupEmail");
+        localStorage.removeItem("verifyEmail");
         localStorage.removeItem("otpCooldown");
         localStorage.removeItem("otpResendCount");
         setMessage({ type: "success", text: "Email verified successfully!" });
@@ -122,10 +146,10 @@ const VerifyEmail = () => {
 
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || updateLoading}
           className="mt-4 w-full py-2 font-semibold border bg-gradient-to-r from-[#c9812f] to-blue-500 border-gray-300 text-white rounded cursor-pointer"
         >
-          {loading ? "Verifying..." : "Verify"}
+          {loading || updateLoading ? "Verifying..." : "Verify"}
         </button>
 
         {/* Success/Error Message */}

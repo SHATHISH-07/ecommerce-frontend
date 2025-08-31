@@ -4,6 +4,7 @@ import {
   ShoppingBag,
   LogOut,
   ShoppingBasket,
+  Package,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -82,6 +83,10 @@ const ProfileMenu = ({ user }: ProfileMenuProps) => {
 
       <button onClick={() => navigate("/products")} className={menuBtn}>
         <ShoppingBasket size={18} /> <span>View All Products</span>
+      </button>
+
+      <button onClick={() => navigate("/categories")} className={menuBtn}>
+        <Package size={18} /> <span>View All Categories</span>
       </button>
 
       <button onClick={() => navigate("/cart")} className={menuBtn}>

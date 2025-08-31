@@ -20,6 +20,7 @@ import ProductsByCategory from "./pages/userPages/ProductsByCategory";
 import NotFound from "./pages/userPages/NotFound";
 
 import AdminDashboard from "./pages/adminPages/AdminDashboard";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   const { user, loading } = useAuth();
@@ -35,6 +36,7 @@ const App = () => {
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="*" element={<Navigate to="/admin" replace />} />
         </Routes>
+        <Toaster />
       </>
     );
   }
@@ -57,7 +59,6 @@ const App = () => {
         {/* Guest Routes */}
         <Route element={<GuestRoute />}>
           <Route path="/signup" element={<SignUp />}></Route>
-          <Route path="/verify-email" element={<VerifyEmail />}></Route>
           <Route path="/login" element={<Login />}></Route>
         </Route>
 
@@ -69,10 +70,13 @@ const App = () => {
           <Route path="/cart" element={<Cart />} />
         </Route>
 
+        <Route path="/verify-email" element={<VerifyEmail />}></Route>
+
         {/* 404 Page */}
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
+      <Toaster />
     </>
   );
 };
