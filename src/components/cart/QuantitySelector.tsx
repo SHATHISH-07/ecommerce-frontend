@@ -30,14 +30,20 @@ const QuantitySelector = ({
   return (
     <div className="flex items-center gap-2 border border-gray-800 dark:border-gray-300 rounded-md px-2 py-1 w-fit">
       <button
-        onClick={handleDecrease}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleDecrease();
+        }}
         className="px-2 py-1 text-lg cursor-pointer font-bold text-gray-700 dark:text-gray-300 "
       >
         -
       </button>
       <span className="min-w-[2ch] text-center">{quantity}</span>
       <button
-        onClick={handleIncrease}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleIncrease();
+        }}
         className="px-2 py-1 cursor-pointer text-lg font-bold text-gray-700 dark:text-gray-300 "
       >
         +

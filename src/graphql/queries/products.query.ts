@@ -98,3 +98,39 @@ export const GET_PRODUCTS_BY_IDS = gql`
     }
   }
 `
+
+export const GET_PRODUCT_COMPLETE_DETAILS_BY_ID = gql`
+ query GetProductById($id: Int!) {
+    getProductById(id: $id) {
+        id
+        title
+        description
+        category
+        price
+        discountPercentage
+        rating
+        stock
+        tags
+        brand
+        weight
+        dimensions{
+          width
+          height
+          depth
+        }
+        warrantyInformation  
+        shippingInformation
+        reviews{
+          rating
+          comment
+          date
+          reviewerName
+          reviewerEmail
+        }
+        availabilityStatus
+        returnPolicy
+        images
+        thumbnail
+    }
+  }
+`

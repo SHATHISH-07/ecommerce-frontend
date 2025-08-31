@@ -7,6 +7,7 @@ import { useMutation } from "@apollo/client";
 import { REMOVE_CART_ITEM } from "../../graphql/mutations/cart";
 import QuantitySelector from "./QuantitySelector";
 import { UPDATED_USER_CART_QUANTITY } from "../../graphql/queries/cart.query";
+import { useNavigate } from "react-router-dom";
 
 const DesktopCartCard = ({
   product,
@@ -25,6 +26,8 @@ const DesktopCartCard = ({
     refetchQueries: ["GetUserCart"],
   });
 
+  const navigate = useNavigate();
+
   const handleQuantityChange = async (newQty: number) => {
     try {
       await updateUserCart({
@@ -42,7 +45,10 @@ const DesktopCartCard = ({
   const originalPrice = product.price / (1 - product.discountPercentage / 100);
 
   return (
-    <div className="flex gap-4 border rounded-sm overflow-hidden border-gray-500 bg-white dark:bg-black w-full">
+    <div
+      onClick={() => navigate(`/products/${product.id}`)}
+      className="flex gap-4 border rounded-sm overflow-hidden border-gray-500 bg-white dark:bg-black w-full cursor-pointer"
+    >
       {/* Image Section */}
       <img
         src={product.thumbnail}
@@ -67,7 +73,10 @@ const DesktopCartCard = ({
 
           {/* Remove button */}
           <button
-            onClick={handleRemove}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleRemove();
+            }}
             className="text-red-500 hover:text-red-700 cursor-pointer"
           >
             <Trash2 size={20} />

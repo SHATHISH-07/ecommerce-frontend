@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { ADD_TO_CART } from "../../graphql/mutations/cart";
 import { GET_USER_CART_COUNT } from "../../graphql/queries/cart.query";
+import { useNavigate } from "react-router-dom";
+import { useAppToast } from "../../utils/useAppToast";
 
 const MobileProductCard = ({ product }: { product: Product }) => {
   const [quantity, setQuantity] = useState(1);
@@ -13,6 +15,9 @@ const MobileProductCard = ({ product }: { product: Product }) => {
   });
 
   const originalPrice = product.price / (1 - product.discountPercentage / 100);
+
+  const navigate = useNavigate();
+  const { toastCartSuccess, toastError } = useAppToast();
 
   const handleAddToCart = async () => {
     try {
@@ -26,18 +31,21 @@ const MobileProductCard = ({ product }: { product: Product }) => {
       });
 
       if (data?.addToCart?.success) {
-        alert(data.addToCart.message);
+        toastCartSuccess(data.addToCart.message);
       } else {
-        alert("Failed to add to cart");
+        toastError("Failed to add to cart");
       }
     } catch (error) {
       console.error(error);
-      alert("Something went wrong while adding to cart");
+      toastError("Something went wrong while adding to cart");
     }
   };
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-lg border shadow-lg transition-shadow duration-300 hover:shadow-xl">
+    <div
+      className="flex flex-col overflow-hidden rounded-lg border shadow-lg transition-shadow duration-300 hover:shadow-xl cursor-pointer"
+      onClick={() => navigate(`/products/${product.id}`)}
+    >
       <img
         src={product.thumbnail}
         alt={product.title}
@@ -71,7 +79,10 @@ const MobileProductCard = ({ product }: { product: Product }) => {
             <div className="flex items-center gap-1 text-sm">
               <div className="flex items-center gap-2 border border-gray-800 dark:border-gray-300 rounded-md px-2 py-1 w-fit">
                 <button
-                  onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setQuantity((prev) => Math.max(1, prev - 1));
+                  }}
                   className="px-2 py-1 text-lg font-bold text-gray-700 dark:text-gray-300 cursor-pointer"
                 >
                   -
@@ -80,7 +91,10 @@ const MobileProductCard = ({ product }: { product: Product }) => {
                   {quantity}
                 </span>
                 <button
-                  onClick={() => setQuantity((prev) => Math.min(10, prev + 1))}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setQuantity((prev) => Math.min(10, prev + 1));
+                  }}
                   className="px-2 py-1 text-lg font-bold text-gray-700 dark:text-gray-300 cursor-pointer"
                 >
                   +
@@ -92,7 +106,10 @@ const MobileProductCard = ({ product }: { product: Product }) => {
           {/* Quantity + Add to Cart */}
           <div className="flex flex-col items-center gap-3">
             <button
-              onClick={handleAddToCart}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAddToCart();
+              }}
               disabled={loading}
               className="flex items-center justify-center gap-2 text-white px-4 py-2 rounded-lg bg-gradient-to-r from-[#c9812f] to-blue-500 cursor-pointer font-semibold disabled:opacity-50"
             >
