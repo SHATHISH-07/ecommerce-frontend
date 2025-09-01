@@ -50,7 +50,7 @@ const RelatedProducts = ({ categorySlug }: { categorySlug: string }) => {
     p-3 rounded-full
     bg-gradient-to-br from-white/90 via-white/70 to-gray-200
     dark:from-gray-800 dark:via-gray-700 dark:to-gray-600
-    shadow-lg border border-gray-300 dark:border-gray-700
+    shadow-lg border border-gray-300 dark:border-gray-300
     cursor-pointer overflow-hidden
     hover:brightness-110 transition
   "
@@ -120,7 +120,7 @@ const RelatedProducts = ({ categorySlug }: { categorySlug: string }) => {
     p-3 rounded-full
     bg-gradient-to-br from-white/90 via-white/70 to-gray-200
     dark:from-gray-800 dark:via-gray-700 dark:to-gray-600
-    shadow-lg border border-gray-300 dark:border-gray-700
+    shadow-lg border border-gray-300 dark:border-gray-300
     cursor-pointer overflow-hidden
     hover:brightness-110 transition
   "
