@@ -21,6 +21,9 @@ import NotFound from "./pages/userPages/NotFound";
 
 import AdminDashboard from "./pages/adminPages/AdminDashboard";
 import { Toaster } from "react-hot-toast";
+import VerifyOrderPage from "./pages/userPages/VerifyOrderPage";
+import PlaceOrderPage from "./components/PlaceOrderForm";
+import CartCheckoutPage from "./components/cart/CartCheckOutPage";
 
 const App = () => {
   const { user, loading } = useAuth();
@@ -68,6 +71,9 @@ const App = () => {
           <Route path="/orders" element={<Orders />} />
           <Route path="/orderDetails" element={<OrderDetails />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/verify-order-otp" element={<VerifyOrderPage />} />
+          <Route path="/placeorder" element={<PlaceOrderPage />} />
+          <Route path="/cart-checkout" element={<CartCheckoutPage />} />
         </Route>
 
         <Route path="/verify-email" element={<VerifyEmail />}></Route>

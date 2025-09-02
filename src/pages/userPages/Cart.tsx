@@ -63,7 +63,7 @@ const Cart = () => {
 
           <div className="flex justify-center md:justify-end mt-6">
             <button
-              onClick={() => navigate("/checkout")}
+              onClick={() => navigate("/cart-checkout")}
               className="px-6 py-2 font-semibold text-white rounded-lg bg-gradient-to-r from-[#c9812f] to-blue-500 cursor-pointer"
             >
               Proceed to Checkout

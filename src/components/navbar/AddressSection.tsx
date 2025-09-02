@@ -6,6 +6,7 @@ import { UPDATE_USER_ADDRESS } from "../../graphql/mutations/user";
 import { useApolloClient, useMutation } from "@apollo/client";
 import { refetchAndStoreUser } from "../../utils/refetchUser";
 import { useAppDispatch } from "../../app/store";
+import { useAppToast } from "../../utils/useAppToast";
 
 interface AddressSectionProps {
   user: UserType | null;
@@ -25,6 +26,8 @@ const AddressSection = ({
 
   const [newAddress, setNewAddress] = useState("");
 
+  const { toastSuccess, toastError } = useAppToast();
+
   const [updateUserAddress, { loading }] = useMutation(UPDATE_USER_ADDRESS);
 
   const handleChangeAddress = async () => {
@@ -39,9 +42,11 @@ const AddressSection = ({
       if (data) {
         await refetchAndStoreUser(client, dispatch);
         setNewAddress("");
+        toastSuccess("Address updated successfully");
       }
     } catch (err) {
       console.error(err);
+      toastError("Failed to update address");
     }
   };
 

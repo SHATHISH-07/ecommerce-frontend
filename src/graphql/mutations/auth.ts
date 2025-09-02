@@ -48,3 +48,13 @@ export const VERIFY_EMAIL_UPDATE_OTP = gql`
     }
   }
 `;
+
+export const VERIFY_ORDER_OTP = gql`
+  mutation verifyOrderOtp($email: String!, $otp: String!) {
+    verifyOrderOtp(email: $email, otp: $otp) {
+      success
+      message
+    }
+  }
+`;
+

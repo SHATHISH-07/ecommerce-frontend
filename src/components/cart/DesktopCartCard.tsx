@@ -8,6 +8,7 @@ import { REMOVE_CART_ITEM } from "../../graphql/mutations/cart";
 import QuantitySelector from "./QuantitySelector";
 import { UPDATED_USER_CART_QUANTITY } from "../../graphql/queries/cart.query";
 import { useNavigate } from "react-router-dom";
+import { useAppToast } from "../../utils/useAppToast";
 
 const DesktopCartCard = ({
   product,
@@ -28,6 +29,8 @@ const DesktopCartCard = ({
 
   const navigate = useNavigate();
 
+  const { toastSuccess } = useAppToast();
+
   const handleQuantityChange = async (newQty: number) => {
     try {
       await updateUserCart({
@@ -40,9 +43,27 @@ const DesktopCartCard = ({
 
   const handleRemove = async () => {
     await removeCartItem({ variables: { productId: productId } });
+    toastSuccess("Product removed from cart");
   };
 
   const originalPrice = product.price / (1 - product.discountPercentage / 100);
+
+  const handleBuyNow = () => {
+    navigate("/placeorder", {
+      state: {
+        products: [
+          {
+            id: product.id,
+            title: product.title,
+            thumbnail: product.thumbnail,
+            price: product.price,
+            quantity,
+            returnPolicy: product.returnPolicy,
+          },
+        ],
+      },
+    });
+  };
 
   return (
     <div
@@ -121,7 +142,13 @@ const DesktopCartCard = ({
             />
 
             {/* Order Button */}
-            <button className="flex items-center gap-2 text-white px-4 py-2 rounded-lg bg-gradient-to-r from-[#c9812f] to-blue-500 cursor-pointer font-semibold">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleBuyNow();
+              }}
+              className="flex items-center gap-2 text-white px-4 py-2 rounded-lg bg-gradient-to-r from-[#c9812f] to-blue-500 cursor-pointer font-semibold"
+            >
               <ShoppingCart size={18} />
               <span>Order now</span>
             </button>

@@ -17,6 +17,7 @@ import { ADD_TO_CART } from "../../graphql/mutations/cart";
 import { GET_USER_CART_COUNT } from "../../graphql/queries/cart.query";
 import { useAppToast } from "../../utils/useAppToast";
 import FullscreenImageModal from "../FullScreenImageModal";
+import { useNavigate } from "react-router-dom";
 
 interface ProductDetailCardProps {
   product: DetailedProduct;
@@ -28,6 +29,8 @@ const ProductDetailCard = ({ product }: ProductDetailCardProps) => {
   const [quantity, setQuantity] = useState<number>(1);
 
   const { toastCartSuccess, toastError } = useAppToast();
+
+  const navigate = useNavigate();
 
   // Mutation
   const [addToCart, { loading }] = useMutation(ADD_TO_CART, {
@@ -58,7 +61,20 @@ const ProductDetailCard = ({ product }: ProductDetailCardProps) => {
   };
 
   const handleBuyNow = () => {
-    toastCartSuccess("Proceeding to checkout...");
+    navigate("/placeorder", {
+      state: {
+        products: [
+          {
+            id: product.id,
+            title: product.title,
+            thumbnail: product.thumbnail,
+            price: product.price,
+            quantity,
+            returnPolicy: product.returnPolicy,
+          },
+        ],
+      },
+    });
   };
 
   const maxQuantity = Math.min(product.stock, 10);
