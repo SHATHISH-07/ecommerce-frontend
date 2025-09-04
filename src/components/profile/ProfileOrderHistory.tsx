@@ -57,27 +57,32 @@ const ProfileOrderHistory = ({ user }: { user: UserType | null }) => {
 
         {/* Content */}
         <CollapsibleContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 w-full ">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
             {products.map((product) => (
               <div
                 key={product.id}
-                className="flex cursor-pointer flex-col border rounded-lg shadow-sm border-black dark:border-gray-300 bg-white dark:bg-[#1e1e1e] p-3 max-w-sm mx-auto"
                 onClick={() => navigate(`/products/${product.id}`)}
+                className="flex flex-col justify-between cursor-pointer border rounded-lg shadow-sm border-black dark:border-gray-300 bg-white dark:bg-[#1e1e1e] p-4 h-full hover:shadow-md transition"
               >
+                {/* Image */}
                 <img
                   src={product.thumbnail}
                   alt={product.title}
-                  className="w-30 h-30 object-contain rounded-md mb-3 mx-auto"
+                  className="w-full h-48 object-contain rounded-md mb-4"
                 />
-                <h3 className="font-semibold text-gray-700 dark:text-gray-200 text-base text-center">
-                  {product.title}
-                </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
-                  ${product.price}
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-center">
-                  {product.returnPolicy || "No return policy"}
-                </p>
+
+                {/* Product info */}
+                <div className="flex flex-col flex-1 justify-between">
+                  <h3 className="font-semibold text-gray-700 dark:text-gray-200 text-base text-center mb-2">
+                    {product.title}
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 text-center mb-1">
+                    ${product.price}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
+                    {product.returnPolicy || "No return policy"}
+                  </p>
+                </div>
               </div>
             ))}
           </div>

@@ -6,7 +6,7 @@ import { GET_USER_CART } from "../../graphql/queries/cart.query";
 import LoadingSpinner from "../../components/products/LoadingSpinner";
 import ResponsiveProductCard from "../../components/products/ResponsiveProductCard";
 import CartProductCard from "../../components/products/CartProductCard";
-import { PartyPopper, ShoppingCart } from "lucide-react";
+import { AlertTriangle, PartyPopper, ShoppingCart } from "lucide-react";
 import { type Product } from "../../types/products";
 
 const ProductsByCategory = () => {
@@ -35,7 +35,19 @@ const ProductsByCategory = () => {
         <LoadingSpinner />
       </div>
     );
-  if (error) return <p>Error loading products: {error.message}</p>;
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center my-20 p-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg max-w-lg mx-auto text-center">
+        <AlertTriangle className="text-red-500 w-12 h-12 mb-4" />
+        <h3 className="text-xl font-semibold text-red-800 dark:text-red-300">
+          Oops! Something went wrong.
+        </h3>
+        <p className="text-red-600 dark:text-red-400 mt-2">
+          We couldn't load the products. Please try again later.
+        </p>
+      </div>
+    );
+  }
 
   const products = data?.getProductsByCategory?.products ?? [];
   const cartProducts = cartData?.getUserCart?.products ?? [];

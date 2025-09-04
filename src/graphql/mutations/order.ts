@@ -23,3 +23,21 @@ export const PLACE_ORDER_FROM_CART = gql`
     }
   }
 `;
+
+export const CANCEL_ORDER = gql`
+  mutation CancelOrder($orderId: String!, $reason: String!) {
+    cancelOrder(orderId: $orderId, reason: $reason) {
+      success
+      message
+    }
+  }
+`;
+
+export const RETURN_ORDER = gql`
+ mutation ReturnOrder($orderId: String!, $reason: String!){
+  returnOrder(orderId: $orderId, reason: $reason) {
+    message
+    success
+  }
+}
+`;

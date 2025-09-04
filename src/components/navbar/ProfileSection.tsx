@@ -32,7 +32,7 @@ const ProfileSection = ({ user }: ProfileSectionProps) => {
         </div>
       }
     >
-      <ProfileMenu user={user} />
+      {(onClose) => <ProfileMenu user={user} onClose={onClose} />}
     </ProfileHoverModal>
   );
 };

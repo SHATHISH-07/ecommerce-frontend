@@ -10,39 +10,36 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-white dark:bg-black footer-gradient-shadow text-gray-800 dark:text-gray-200 py-6">
-      <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center space-y-8 md:space-y-0 md:space-x-8">
-        {/* Logo & Description */}
-        <div className="flex flex-col items-center text-center md:flex-1 md:items-start md:text-left">
+    <footer className="relative bg-white dark:bg-black footer-gradient-shadow">
+      {/* Glass overlay */}
+      <div className="absolute inset-0 "></div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Left: Logo & tagline */}
+        <div className="flex flex-col items-center md:items-start justify-center space-y-4">
           <Logo />
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+          <p className="text-sm text-gray-700 dark:text-gray-300">
             Where your wishlist comes to life.
           </p>
-          <a
-            href="https://shathish2004.github.io/Shathish-Portfolio/#/contact"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block py-5 text-lg font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+          <button
+            onClick={handleNavigateHome}
+            className="mt-3 px-1 py-2 text-sm font-semibold rounded-x cursor-pointer"
           >
-            <i className="fa-regular fa-comment"></i> Give FeedBack
-          </a>
+            Back to Home
+          </button>
         </div>
 
-        {/* Navigation & Social Links */}
-        <div className="flex-1 flex flex-col items-center space-y-8">
-          {/* Navigation */}
-          <div className="flex space-x-6">
-            <p
-              onClick={handleNavigateHome}
-              className="cursor-pointer hover:text-gray-400 dark:hover:text-gray-600 transition-colors"
-            >
-              Home
-            </p>
+        {/* Middle: Navigation */}
+        <div className="flex flex-col items-center md:items-center space-y-4">
+          <h3 className="font-bold text-lg text-black dark:text-white">
+            Quick Links
+          </h3>
+          <nav className="flex space-x-6 text-sm">
             <a
               href="https://shathish2004.github.io/Shathish-Portfolio/#/about"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-gray-400 dark:hover:text-gray-600 transition-colors"
+              className="hover:text-blue-400 transition"
             >
               About
             </a>
@@ -50,60 +47,67 @@ const Footer = () => {
               href="https://shathish2004.github.io/Shathish-Portfolio/#/contact"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-gray-400 dark:hover:text-gray-600 transition-colors"
+              className="hover:text-blue-400 transition"
             >
               Contact
             </a>
-          </div>
+            <a
+              href="https://shathish2004.github.io/Shathish-Portfolio/#/projects"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-blue-400 transition"
+            >
+              Projects
+            </a>
+          </nav>
+        </div>
 
-          {/* Social Links */}
-          <div className="flex flex-row items-center justify-center space-x-8">
+        {/* Right: Social */}
+        <div className="flex flex-col items-center md:items-end space-y-4">
+          <h3 className="font-bold text-lg text-black dark:text-white">
+            Connect
+          </h3>
+          <div className="flex space-x-5">
             <a
               href="https://github.com/SHATHISH-07"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center space-x-2 hover:text-gray-400 dark:hover:text-gray-600 transition-colors"
-              aria-label="GitHub"
+              className="hover:text-gray-400 transition"
             >
               <i className="fa-brands fa-github text-2xl"></i>
-              <span className="hidden sm:inline">GitHub</span>
             </a>
             <a
               href="https://www.linkedin.com/in/shathish-kumaran"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center space-x-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              aria-label="LinkedIn"
+              className="hover:text-blue-400 transition"
             >
               <i className="fa-brands fa-linkedin-in text-2xl"></i>
-              <span className="hidden sm:inline">LinkedIn</span>
             </a>
             <a
               href="https://shathish2004.github.io/Shathish-Portfolio"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center space-x-2 hover:text-green-600 dark:hover:text-green-400 transition-colors"
-              aria-label="Portfolio"
+              className="hover:text-green-400 transition"
             >
               <i className="fa-solid fa-globe text-2xl"></i>
-              <span className="hidden sm:inline">Portfolio</span>
             </a>
           </div>
         </div>
+      </div>
 
-        {/* Copyright */}
-        <div className="flex-1 text-center md:text-right text-sm text-gray-500 dark:text-gray-400">
-          © 2025{" "}
-          <a
-            href="https://www.linkedin.com/in/shathish-kumaran"
-            className="hover:underline"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Shathish Kumaran
-          </a>
-          . All rights reserved.
-        </div>
+      {/* Copyright */}
+      <div className="relative z-10 border-t border-white/10 py-4 text-center text-sm text-gray-400">
+        © {new Date().getFullYear()}{" "}
+        <a
+          href="https://www.linkedin.com/in/shathish-kumaran"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:underline"
+        >
+          Shathish Kumaran
+        </a>{" "}
+        · All Rights Reserved
       </div>
     </footer>
   );

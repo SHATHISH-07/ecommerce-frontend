@@ -15,9 +15,10 @@ import DarkModeToggle from "../DarkThemeToggler";
 
 interface ProfileMenuProps {
   user: UserType | null;
+  onClose?: () => void;
 }
 
-const ProfileMenu = ({ user }: ProfileMenuProps) => {
+const ProfileMenu = ({ user, onClose }: ProfileMenuProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -25,6 +26,7 @@ const ProfileMenu = ({ user }: ProfileMenuProps) => {
     dispatch(clearUser());
     localStorage.removeItem("token");
     navigate("/");
+    onClose?.();
   };
 
   const menuBtn =
@@ -34,7 +36,10 @@ const ProfileMenu = ({ user }: ProfileMenuProps) => {
     return (
       <div className="flex flex-col justify-center items-center space-y-2 w-full">
         <button
-          onClick={() => navigate("/login")}
+          onClick={() => {
+            navigate("/login");
+            onClose?.();
+          }}
           className="flex items-center outline-none justify-center cursor-pointer w-full px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#3c3c3c] rounded-md transition gap-2"
         >
           <LogIn size={18} />
@@ -42,7 +47,10 @@ const ProfileMenu = ({ user }: ProfileMenuProps) => {
         </button>
 
         <button
-          onClick={() => navigate("/signup")}
+          onClick={() => {
+            navigate("/signup");
+            onClose?.();
+          }}
           className="flex items-center outline-none justify-center cursor-pointer w-full px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#3c3c3c] rounded-md transition gap-2"
         >
           <UserPlus size={18} />
@@ -50,7 +58,10 @@ const ProfileMenu = ({ user }: ProfileMenuProps) => {
         </button>
 
         <button
-          onClick={() => navigate("/products")}
+          onClick={() => {
+            navigate("/products");
+            onClose?.();
+          }}
           className="flex items-center outline-none justify-center cursor-pointer w-full px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#3c3c3c] rounded-md transition gap-2"
         >
           <ShoppingBasket size={18} />
@@ -77,23 +88,53 @@ const ProfileMenu = ({ user }: ProfileMenuProps) => {
       <hr className="border-gray-300 dark:border-gray-700 my-1" />
 
       {/* Menu items */}
-      <button onClick={() => navigate("/profile")} className={menuBtn}>
+      <button
+        onClick={() => {
+          navigate("/profile");
+          onClose?.();
+        }}
+        className={menuBtn}
+      >
         <CircleUser size={18} /> <span>Go to Profile</span>
       </button>
 
-      <button onClick={() => navigate("/products")} className={menuBtn}>
+      <button
+        onClick={() => {
+          navigate("/products");
+          onClose?.();
+        }}
+        className={menuBtn}
+      >
         <ShoppingBasket size={18} /> <span>View All Products</span>
       </button>
 
-      <button onClick={() => navigate("/categories")} className={menuBtn}>
+      <button
+        onClick={() => {
+          navigate("/categories");
+          onClose?.();
+        }}
+        className={menuBtn}
+      >
         <Package size={18} /> <span>View All Categories</span>
       </button>
 
-      <button onClick={() => navigate("/cart")} className={menuBtn}>
+      <button
+        onClick={() => {
+          navigate("/cart");
+          onClose?.();
+        }}
+        className={menuBtn}
+      >
         <ShoppingCart size={18} /> <span>Your Cart</span>
       </button>
 
-      <button onClick={() => navigate("/orders")} className={menuBtn}>
+      <button
+        onClick={() => {
+          navigate("/orders");
+          onClose?.();
+        }}
+        className={menuBtn}
+      >
         <ShoppingBag size={18} /> <span>Your Orders</span>
       </button>
 

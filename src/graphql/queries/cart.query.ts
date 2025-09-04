@@ -12,6 +12,7 @@ export const GET_USER_CART_COUNT = gql`
 export const GET_USER_CART = gql`
     query GetUserCart {
         getUserCart {
+            id
             userId
             products {
                 productId

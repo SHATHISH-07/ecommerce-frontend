@@ -70,7 +70,6 @@ const PlaceOrderPage = () => {
     e.preventDefault();
     if (!user?.email) return;
 
-    // Save email for OTP verification
     localStorage.setItem("orderEmail", user.email);
 
     const productsInput = products.map((p) => ({
@@ -91,7 +90,6 @@ const PlaceOrderPage = () => {
             shippingAddress,
             paymentMethod,
             totalAmount,
-            // Optional: cardDetails / upiId / netBanking can be included later
           },
         },
       });
@@ -115,6 +113,44 @@ const PlaceOrderPage = () => {
         <h2 className="text-xl font-bold text-center text-gray-700 dark:text-gray-300 mb-6">
           Confirm Your Order
         </h2>
+
+        {/* Product Summary */}
+        <div className="space-y-2 mb-6">
+          <h3 className="font-semibold text-lg text-gray-700 dark:text-gray-300">
+            Product Summary
+          </h3>
+          <ul className="divide-y divide-gray-200 dark:divide-gray-700 rounded-lg border border-gray-200 dark:border-gray-700">
+            {products.map((p) => (
+              <li
+                key={p.id}
+                className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg dark:bg-[#1f1f1f]"
+              >
+                {p.thumbnail && (
+                  <img
+                    src={p.thumbnail}
+                    alt={p.title}
+                    className="w-16 h-16 object-cover rounded-md"
+                  />
+                )}
+                <div className="flex-1">
+                  <p className="font-medium text-gray-800 dark:text-gray-200">
+                    {p.title}
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Price: ₹{p.price} × {p.quantity}
+                  </p>
+                </div>
+                <p className="font-semibold text-gray-700 dark:text-gray-300">
+                  ₹{(p.price * p.quantity).toFixed(2)}
+                </p>
+              </li>
+            ))}
+          </ul>
+          <div className="flex justify-between items-center font-semibold text-lg text-gray-700 dark:text-gray-300 mt-3">
+            <span>Total:</span>
+            <span className="text-blue-600">₹{totalAmount.toFixed(2)}</span>
+          </div>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Shipping Address */}

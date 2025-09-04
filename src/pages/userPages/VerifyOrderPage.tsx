@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client";
-import { VERIFY_ORDER_OTP } from "../../graphql/mutations/auth";
+import {
+  VERIFY_ORDER_OTP,
+  RESEND_ORDER_OTP,
+} from "../../graphql/mutations/auth";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useAppToast } from "../../utils/useAppToast";
 
 const VerifyOrderPage = () => {
   const [otp, setOtp] = useState("");
@@ -15,6 +19,8 @@ const VerifyOrderPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const { toastSuccess, toastError } = useAppToast();
+
   // Get email from location.state or localStorage
   const email = location.state?.email || localStorage.getItem("orderEmail");
   if (!email) {
@@ -22,6 +28,8 @@ const VerifyOrderPage = () => {
   }
 
   const [verifyOrderOtp, { loading }] = useMutation(VERIFY_ORDER_OTP);
+  const [resendOrderOtp, { loading: resendLoading }] =
+    useMutation(RESEND_ORDER_OTP);
 
   // Restore cooldown & resend count from localStorage
   useEffect(() => {
@@ -53,6 +61,16 @@ const VerifyOrderPage = () => {
     localStorage.setItem("otpResendCount", resendCount.toString());
   }, [resendCount]);
 
+  useEffect(() => {
+    if (email) {
+      setCooldown(0);
+      setResendCount(0);
+      localStorage.setItem("orderEmail", email);
+      localStorage.removeItem("otpCooldown");
+      localStorage.removeItem("otpResendCount");
+    }
+  }, [email]);
+
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
@@ -68,6 +86,8 @@ const VerifyOrderPage = () => {
           text: "OTP verified. Order placed successfully!",
         });
 
+        toastSuccess("Order placed successfully!");
+
         // Clear localStorage
         localStorage.removeItem("orderEmail");
         localStorage.removeItem("otpCooldown");
@@ -80,22 +100,47 @@ const VerifyOrderPage = () => {
           type: "error",
           text: data?.verifyOrderOtp?.message || "Invalid OTP. Try again.",
         });
+
+        toastError("Invalid OTP. Try again.");
       }
     } catch (err: unknown) {
       setMessage({
         type: "error",
         text: err instanceof Error ? err.message : "Verification failed",
       });
+
+      toastError("Verification failed");
     }
   };
 
   const handleResendOtp = async () => {
     if (!email) return;
 
-    // Mock resend: In real case, call resend OTP mutation for orders
-    setResendCount((prev) => prev + 1);
-    setCooldown(60);
-    setMessage({ type: "success", text: "OTP resent successfully!" });
+    try {
+      const { data } = await resendOrderOtp({ variables: { email } });
+
+      if (data?.resendEmailOTP?.success) {
+        setResendCount((prev) => prev + 1);
+        setCooldown(60);
+        setMessage({ type: "success", text: "OTP resent successfully!" });
+
+        toastSuccess("OTP resent successfully!");
+      } else {
+        setMessage({
+          type: "error",
+          text: data?.resendEmailOTP?.message || "Failed to resend OTP",
+        });
+
+        toastError("Failed to resend OTP");
+      }
+    } catch (err: unknown) {
+      setMessage({
+        type: "error",
+        text: err instanceof Error ? err.message : "Failed to resend OTP",
+      });
+
+      toastError("Failed to resend OTP");
+    }
   };
 
   return (
@@ -143,10 +188,12 @@ const VerifyOrderPage = () => {
             Didn’t get the OTP?{" "}
             <span
               onClick={
-                cooldown > 0 || resendCount >= 5 ? undefined : handleResendOtp
+                cooldown > 0 || resendCount >= 5 || resendLoading
+                  ? undefined
+                  : handleResendOtp
               }
               className={`font-semibold cursor-pointer ${
-                cooldown > 0 || resendCount >= 5
+                cooldown > 0 || resendCount >= 5 || resendLoading
                   ? "text-gray-400 cursor-not-allowed"
                   : "text-blue-500 hover:underline"
               }`}
@@ -155,6 +202,8 @@ const VerifyOrderPage = () => {
                 ? "Limit Reached"
                 : cooldown > 0
                 ? `Resend in ${cooldown}s`
+                : resendLoading
+                ? "Resending..."
                 : "Resend OTP"}
             </span>
           </p>

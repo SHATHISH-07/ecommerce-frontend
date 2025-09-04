@@ -75,7 +75,13 @@ const Products = () => {
         <LoadingSpinner />
       </div>
     );
-  if (error) return <p>Error loading products: {error.message}</p>;
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-red-500">Error loading products: {error.message}</p>
+      </div>
+    );
+  }
 
   const results = data?.getAllProducts || data?.searchProducts;
   const products = results?.products ?? [];

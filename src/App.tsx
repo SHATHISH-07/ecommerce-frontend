@@ -12,7 +12,7 @@ import PrivateRoute from "./routes/PrivateRoute";
 import Orders from "./pages/userPages/Orders";
 import Profile from "./pages/userPages/Profile";
 import Cart from "./pages/userPages/Cart";
-import OrderDetails from "./pages/userPages/OrderDetails";
+import TrackOrder from "./pages/userPages/TrackOrder";
 import Products from "./pages/userPages/Products";
 import ProductDetails from "./pages/userPages/ProductDetails";
 import Categories from "./pages/userPages/Categories";
@@ -23,7 +23,7 @@ import AdminDashboard from "./pages/adminPages/AdminDashboard";
 import { Toaster } from "react-hot-toast";
 import VerifyOrderPage from "./pages/userPages/VerifyOrderPage";
 import PlaceOrderPage from "./components/PlaceOrderForm";
-import CartCheckoutPage from "./components/cart/CartCheckOutPage";
+import CartCheckoutPage from "./components/cart/CartCheckoutPage";
 
 const App = () => {
   const { user, loading } = useAuth();
@@ -50,10 +50,10 @@ const App = () => {
       <ScrollToTop />
       <Routes>
         {/* Public Routes */}
-        <Route path="/" element={<Home />}></Route>
-        <Route path="/products" element={<Products />}></Route>
-        <Route path="/products/:id" element={<ProductDetails />}></Route>
-        <Route path="/categories" element={<Categories />}></Route>
+        <Route path="/" element={<Home />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/products/:id" element={<ProductDetails />} />
+        <Route path="/categories" element={<Categories />} />
         <Route
           path="/categories/:categorySlug"
           element={<ProductsByCategory />}
@@ -61,22 +61,22 @@ const App = () => {
 
         {/* Guest Routes */}
         <Route element={<GuestRoute />}>
-          <Route path="/signup" element={<SignUp />}></Route>
-          <Route path="/login" element={<Login />}></Route>
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
         </Route>
 
         {/* Private Routes */}
         <Route element={<PrivateRoute />}>
           <Route path="/profile" element={<Profile />} />
           <Route path="/orders" element={<Orders />} />
-          <Route path="/orderDetails" element={<OrderDetails />} />
+          <Route path="/product/track-order/:id" element={<TrackOrder />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/verify-order-otp" element={<VerifyOrderPage />} />
           <Route path="/placeorder" element={<PlaceOrderPage />} />
           <Route path="/cart-checkout" element={<CartCheckoutPage />} />
         </Route>
 
-        <Route path="/verify-email" element={<VerifyEmail />}></Route>
+        <Route path="/verify-email" element={<VerifyEmail />} />
 
         {/* 404 Page */}
         <Route path="*" element={<NotFound />} />

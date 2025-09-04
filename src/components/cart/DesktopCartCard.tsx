@@ -100,7 +100,7 @@ const DesktopCartCard = ({
             }}
             className="text-red-500 hover:text-red-700 cursor-pointer"
           >
-            <Trash2 size={20} />
+            <Trash2 size={35} />
           </button>
         </div>
 

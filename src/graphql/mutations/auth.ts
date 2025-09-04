@@ -28,6 +28,16 @@ export const RESEND_EMAIL_OTP = gql`
   }
 `;
 
+export const RESEND_ORDER_OTP = gql`
+  mutation ResendOrderOTP($email: String!) {
+    resendEmailOTP(email: $email) {
+      success
+      message
+    }
+  }
+`;
+
+
 export const LOGIN_MUTATION = gql`
   mutation Login($loginIdentifier: String!, $password: String!) {
     login(loginIdentifier: $loginIdentifier, password: $password) {

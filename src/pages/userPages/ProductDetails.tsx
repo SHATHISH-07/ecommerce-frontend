@@ -5,6 +5,7 @@ import LoadingSpinner from "../../components/products/LoadingSpinner";
 import ProductDetailCard from "../../components/products/ProductDetailCard";
 import ProductReviews from "../../components/products/ProductReviews";
 import RelatedProducts from "../../components/products/RelatedProducts";
+import { AlertTriangle } from "lucide-react";
 
 const ProductDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -24,7 +25,19 @@ const ProductDetails = () => {
       </div>
     );
 
-  if (error) return <p className="text-red-500">Error: {error.message}</p>;
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center my-20 p-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg max-w-lg mx-auto text-center">
+        <AlertTriangle className="text-red-500 w-12 h-12 mb-4" />
+        <h3 className="text-xl font-semibold text-red-800 dark:text-red-300">
+          Oops! Something went wrong.
+        </h3>
+        <p className="text-red-600 dark:text-red-400 mt-2">
+          We couldn't load the product. Please try again later.
+        </p>
+      </div>
+    );
+  }
 
   const product = data?.getProductById;
 

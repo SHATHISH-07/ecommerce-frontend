@@ -18,3 +18,10 @@ export interface PlaceOrderFromCartResponse {
         message?: string;
     };
 }
+
+export interface CancelOrderResponse {
+    cancelOrder: {
+        success: boolean;
+        message: string;
+    };
+}
