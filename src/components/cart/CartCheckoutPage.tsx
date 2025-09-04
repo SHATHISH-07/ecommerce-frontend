@@ -67,6 +67,16 @@ const CartCheckoutPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!user?.email) return;
+
+    if (!user.emailVerified) {
+      alert(
+        "Please verify your email in your profile before placing an order."
+      );
+      return;
+    }
+
     try {
       const { data } = await placeOrderFromCart({
         variables: {

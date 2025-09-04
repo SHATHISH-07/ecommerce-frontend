@@ -2,6 +2,7 @@ import { useMutation, useApolloClient } from "@apollo/client";
 import {
   UPDATE_USER_DETAILS,
   UPDATE_USER_EMAIL,
+  UPDATE_USER_PASSWORD,
 } from "../../graphql/mutations/user";
 import { RESEND_EMAIL_OTP } from "../../graphql/mutations/auth";
 import { type UserType } from "../../types/User";
@@ -33,6 +34,9 @@ const EditProfileForm = ({ user }: EditProfileFormProps) => {
   });
 
   const [newEmail, setNewEmail] = useState(user.email || "");
+
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
 
   // --- Profile Update ---
   const [updateUserProfile, { loading: profileLoading }] = useMutation(
@@ -91,6 +95,23 @@ const EditProfileForm = ({ user }: EditProfileFormProps) => {
     }
   );
 
+  const [updatePassword, { loading: updatePasswordLoading }] = useMutation(
+    UPDATE_USER_PASSWORD,
+    {
+      onCompleted: async (data) => {
+        if (data?.updatePassword?.success) {
+          toastSuccess("User password updated successfully");
+        } else {
+          toastError("Failed to update password");
+        }
+      },
+      onError: (err) => {
+        console.error(err);
+        toastError("Failed to update password");
+      },
+    }
+  );
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -136,6 +157,30 @@ const EditProfileForm = ({ user }: EditProfileFormProps) => {
 
     localStorage.setItem("verifyEmail", newEmail);
     resendEmailOtp({ variables: { email: newEmail } });
+  };
+
+  const handlePasswordUpdate = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!currentPassword || !newPassword) {
+      toastError("Please fill both current and new password fields");
+      return;
+    }
+
+    if (currentPassword === newPassword) {
+      toastError("New password cannot be the same as current password");
+      return;
+    }
+
+    updatePassword({
+      variables: {
+        currentPassword,
+        newPassword,
+      },
+    }).then(() => {
+      setCurrentPassword("");
+      setNewPassword("");
+    });
   };
 
   return (
@@ -268,6 +313,55 @@ const EditProfileForm = ({ user }: EditProfileFormProps) => {
                 className="px-5 py-2 rounded-md text-white font-medium bg-gradient-to-r from-[#c9812f] to-blue-500 hover:opacity-90 transition cursor-pointer disabled:opacity-50"
               >
                 {emailLoading ? "Updating..." : "Update Email"}
+              </button>
+
+              {!user.emailVerified && (
+                <button
+                  type="button"
+                  onClick={handleVerifyEmail}
+                  disabled={resendLoading}
+                  className="px-5 py-2 rounded-md text-white font-medium bg-gradient-to-r from-[#c9812f] to-blue-500 hover:opacity-90 transition cursor-pointer disabled:opacity-50"
+                >
+                  {resendLoading ? "Sending..." : "Verify Email"}
+                </button>
+              )}
+            </div>
+          </form>
+        </div>
+
+        {/* Update Password */}
+        <div className="mt-8">
+          <h2 className="text-xl font-semibold mb-4">Password Settings</h2>
+          <form onSubmit={handlePasswordUpdate} className="space-y-4">
+            <div className="flex flex-col">
+              <label className="mb-1 text-sm font-medium">
+                Current Password
+              </label>
+              <input
+                type="text"
+                name="currentPassword"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                className="p-2 border border-black dark:border-gray-300 rounded-md outline-none"
+              />
+            </div>
+            <div className="flex flex-col">
+              <label className="mb-1 text-sm font-medium">New Password</label>
+              <input
+                type="text"
+                name="newPassword"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="p-2 border border-black dark:border-gray-300 rounded-md outline-none"
+              />
+            </div>
+            <div className="flex gap-4 justify-end">
+              <button
+                type="submit"
+                disabled={updatePasswordLoading}
+                className="px-5 py-2 rounded-md text-white font-medium bg-gradient-to-r from-[#c9812f] to-blue-500 hover:opacity-90 transition cursor-pointer disabled:opacity-50"
+              >
+                {updatePasswordLoading ? "Updating..." : "Update Password"}
               </button>
 
               {!user.emailVerified && (

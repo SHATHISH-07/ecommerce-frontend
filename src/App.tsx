@@ -24,6 +24,9 @@ import { Toaster } from "react-hot-toast";
 import VerifyOrderPage from "./pages/userPages/VerifyOrderPage";
 import PlaceOrderPage from "./components/PlaceOrderForm";
 import CartCheckoutPage from "./components/cart/CartCheckoutPage";
+import ForgetPassword from "./pages/userPages/ForgetPassword";
+import PasswordVerify from "./pages/userPages/PasswordVerify";
+import ChangePassword from "./pages/userPages/ChangePassword";
 
 const App = () => {
   const { user, loading } = useAuth();
@@ -63,6 +66,9 @@ const App = () => {
         <Route element={<GuestRoute />}>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/forgetPassword" element={<ForgetPassword />} />
+          <Route path="/reset-password-verify" element={<PasswordVerify />} />
+          <Route path="/changePassword" element={<ChangePassword />} />
         </Route>
 
         {/* Private Routes */}

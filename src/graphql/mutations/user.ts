@@ -6,7 +6,7 @@ export const UPDATE_USER_ADDRESS = gql`
         updateUserProfile(input:$input) {
             address
     }
-}`
+}`;
 
 
 export const UPDATE_USER_DETAILS = gql`
@@ -30,5 +30,23 @@ export const UPDATE_USER_EMAIL = gql`
             email
         }
     }
-`
+`;
+
+export const UPDATE_USER_PASSWORD = gql`
+    mutation UpdatePassword($currentPassword: String!, $newPassword: String!){
+        updatePassword(currentPassword: $currentPassword, newPassword: $newPassword) {
+          message
+          success
+      }
+    }
+`;
+
+export const DELETE_ACCOUNT = gql`
+mutation DeleteAccount($email: String!, $password: String!){
+  deleteAccount(email: $email, password: $password) {
+    message
+    success
+  }
+}
+`;
 

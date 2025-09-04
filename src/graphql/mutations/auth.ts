@@ -68,3 +68,27 @@ export const VERIFY_ORDER_OTP = gql`
   }
 `;
 
+export const INITIATE_RESET_PASSWORD = gql`
+mutation InitiateResetPassword($email: String!){
+  initiateResetPassword(email: $email) {
+    message
+    success
+  }
+}`;
+
+export const RESET_PASSWORD = gql`
+mutation ResetPassword($email: String!, $newPassword: String!, $reenterPassword: String!){
+  resetPassword(email: $email, newPassword: $newPassword, reenterPassword: $reenterPassword) {
+    message
+    success
+  }
+}`;
+
+export const VERIFY_OTP = gql`
+  mutation VerifyPasswordResetOTP($email: String!, $otp: String!) {
+    verifyPasswordResetOtp(email: $email, otp: $otp) {
+      success
+      message
+    }
+  }
+`;

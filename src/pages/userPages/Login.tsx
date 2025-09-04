@@ -7,6 +7,7 @@ import { useAppDispatch } from "../../app/store";
 import { setCurrentUser } from "../../app/slices/userSlice";
 import type { LoginInput } from "../../graphql/types/auth.types";
 import { refetchAndStoreUser } from "../../utils/refetchUser";
+import { Eye, EyeOff } from "lucide-react";
 
 const Login = () => {
   const [formData, setFormData] = useState<LoginInput>({
@@ -17,7 +18,6 @@ const Login = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const client = useApolloClient();
-
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -33,7 +33,6 @@ const Login = () => {
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSuccessMessage(null);
-
     localStorage.removeItem("token");
 
     try {
@@ -47,7 +46,6 @@ const Login = () => {
       if (data?.login?.token) {
         localStorage.setItem("token", data.login.token);
         await client.resetStore();
-
         await refetchAndStoreUser(client, dispatch);
 
         const { data: userData } = await client.query({
@@ -74,7 +72,7 @@ const Login = () => {
           Login to NexKart
         </h2>
         <form
-          className="bg-white dark:bg-black p-6 rounded-lg signup-shadow space-y-5"
+          className="bg-white dark:bg-black p-6 rounded-lg shadow-md space-y-5 signup-shadow"
           onSubmit={handleLoginSubmit}
         >
           {/* Username / Email */}
@@ -93,7 +91,7 @@ const Login = () => {
             />
           </div>
 
-          {/* Password */}
+          {/* Password with Show/Hide */}
           <div>
             <label className="block text-md font-medium text-gray-700 dark:text-gray-300">
               Password
@@ -105,24 +103,31 @@ const Login = () => {
                 value={formData.password}
                 placeholder="password"
                 onChange={handleChange}
-                className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 p-2 rounded pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-3 flex items-center text-sm text-gray-500"
+              <span
+                className="absolute inset-y-0 right-3 flex items-center text-gray-500 cursor-pointer"
+                onClick={() => setShowPassword((prev) => !prev)}
               >
-                {showPassword ? "Hide" : "Show"}
-              </button>
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </span>
             </div>
+            <p className="text-md text-center mt-4 text-gray-600 dark:text-gray-300">
+              <span
+                onClick={() => navigate("/forgetPassword")}
+                className="text-blue-600 hover:underline cursor-pointer dark:text-blue-400"
+              >
+                Forgot Password?
+              </span>
+            </p>
           </div>
 
           {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-[40%] mt-10 mx-auto block border border-gray-300 bg-gradient-to-r from-[#c9812f] to-blue-500 text-white font-bold py-2 px-4 rounded cursor-pointer"
+            className="w-[40%] mt-10 mx-auto block bg-gradient-to-r from-[#c9812f] to-blue-500 text-white font-bold py-2 px-4 rounded cursor-pointer hover:opacity-90 transition"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
@@ -135,7 +140,7 @@ const Login = () => {
             <p className="text-green-600 text-center mt-2">{successMessage}</p>
           )}
 
-          <p className="text-md text-center mt-15 text-gray-600 dark:text-gray-300">
+          <p className="text-md text-center mt-5 text-gray-600 dark:text-gray-300">
             Don&apos;t have an account?{" "}
             <span
               onClick={() => navigate("/signup")}

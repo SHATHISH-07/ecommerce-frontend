@@ -11,6 +11,7 @@ import ProfileCard from "../../components/profile/ProfileCard";
 import EditProfileForm from "../../components/profile/EditProfileForm";
 import ProfileOrderHistory from "../../components/profile/ProfileOrderHistory";
 import { useNavigate } from "react-router-dom";
+import AccountSettings from "../../components/profile/AccountSettings";
 
 const Profile = () => {
   const user = useAppSelector((state: RootState) => state.user.user);
@@ -83,6 +84,10 @@ const Profile = () => {
         <div className="flex flex-col items-center gap-3">
           <ProfileOrderHistory user={user} />
         </div>
+      </div>
+
+      <div>
+        <AccountSettings />
       </div>
     </div>
   );

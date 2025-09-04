@@ -4,6 +4,7 @@ import { PLACE_ORDER } from "../graphql/mutations/order";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import type { RootState } from "../app/store";
+import { useAppToast } from "../utils/useAppToast";
 
 export type PaymentMethod = "Cash_on_Delivery" | "Card" | "UPI" | "NetBanking";
 
@@ -33,6 +34,8 @@ const PlaceOrderPage = () => {
 
   const products: Product[] = location.state?.products || [];
   const user = useSelector((state: RootState) => state.user.user);
+
+  const { toastSuccess, toastError } = useAppToast();
 
   const [shippingAddress, setShippingAddress] = useState<UserAddress>({
     name: user?.name || "",
@@ -70,6 +73,13 @@ const PlaceOrderPage = () => {
     e.preventDefault();
     if (!user?.email) return;
 
+    if (!user.emailVerified) {
+      toastError(
+        "Please verify your email in your profile before placing an order."
+      );
+      return;
+    }
+
     localStorage.setItem("orderEmail", user.email);
 
     const productsInput = products.map((p) => ({
@@ -95,15 +105,16 @@ const PlaceOrderPage = () => {
       });
 
       if (data?.placeOrder?.success) {
+        toastSuccess("Order placed successfully");
         navigate("/verify-order-otp", {
           state: { email: shippingAddress.email },
         });
       } else {
-        alert(data?.placeOrder?.message || "Failed to place order");
+        toastError(data?.placeOrder?.message || "Failed to place order");
       }
     } catch (err) {
       console.error(err);
-      alert("Error placing order");
+      toastError("Error placing order");
     }
   };
 
