@@ -82,8 +82,7 @@ const RelatedProducts = ({ categorySlug }: { categorySlug: string }) => {
         className="
     absolute left-0 top-1/2 -translate-y-1/2 z-10
     p-3 rounded-full
-    bg-gradient-to-br from-white/90 via-white/70 to-gray-200
-    dark:from-gray-800 dark:via-gray-700 dark:to-gray-600
+     bg-white/70 dark:bg-black/70
     shadow-lg border border-gray-300 dark:border-gray-300
     cursor-pointer overflow-hidden
     hover:brightness-110 transition
@@ -152,8 +151,7 @@ const RelatedProducts = ({ categorySlug }: { categorySlug: string }) => {
         className="
     absolute right-0 top-1/2 -translate-y-1/2 z-10
     p-3 rounded-full
-    bg-gradient-to-br from-white/90 via-white/70 to-gray-200
-    dark:from-gray-800 dark:via-gray-700 dark:to-gray-600
+    bg-white/70 dark:bg-black/70
     shadow-lg border border-gray-300 dark:border-gray-300
     cursor-pointer overflow-hidden
     hover:brightness-110 transition

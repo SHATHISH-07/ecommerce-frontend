@@ -22,7 +22,7 @@ import NotFound from "./pages/userPages/NotFound";
 import AdminDashboard from "./pages/adminPages/AdminDashboard";
 import { Toaster } from "react-hot-toast";
 import VerifyOrderPage from "./pages/userPages/VerifyOrderPage";
-import PlaceOrderPage from "./components/PlaceOrderForm";
+import PlaceOrderPage from "./components/order/PlaceOrderForm";
 import CartCheckoutPage from "./components/cart/CartCheckoutPage";
 import ForgetPassword from "./pages/userPages/ForgetPassword";
 import PasswordVerify from "./pages/userPages/PasswordVerify";
