@@ -41,7 +41,7 @@ const DesktopProductCard = ({ product }: { product: Product }) => {
       }
     } catch (err) {
       console.error(err);
-      toastError("Error adding to cart");
+      toastError("Error adding to cart please login or signup");
     }
   };
 

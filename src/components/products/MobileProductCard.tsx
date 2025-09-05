@@ -37,7 +37,7 @@ const MobileProductCard = ({ product }: { product: Product }) => {
       }
     } catch (error) {
       console.error(error);
-      toastError("Something went wrong while adding to cart");
+      toastError("Error adding to cart. Please sign up or login");
     }
   };
 

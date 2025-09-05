@@ -92,6 +92,7 @@ const TrackOrder = () => {
       if (res.data?.cancelOrder.success) {
         toastSuccess(res.data.cancelOrder.message);
         refetch();
+        navigate("/orders");
         setShowCancelModal(false);
       } else {
         toastError(res.data?.cancelOrder.message || "Cancellation failed.");

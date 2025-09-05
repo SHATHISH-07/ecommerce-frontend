@@ -56,7 +56,7 @@ const ProductDetailCard = ({ product }: ProductDetailCardProps) => {
       }
     } catch (err) {
       console.error(err);
-      toastError("Error adding to cart");
+      toastError("Error adding to cart. Please sign up or login");
     }
   };
 
