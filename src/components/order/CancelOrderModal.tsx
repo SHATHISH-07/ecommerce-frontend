@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAppToast } from "../utils/useAppToast";
+import { useAppToast } from "../../utils/useAppToast";
 
 interface ProductSummary {
   externalProductId: number;
@@ -14,7 +14,7 @@ interface CancelOrderModalProps {
   totalAmount: number;
   products: ProductSummary[];
   onClose: () => void;
-  onConfirm: (reason: string) => Promise<void> | void; // make async-safe
+  onConfirm: (reason: string) => Promise<void> | void;
 }
 
 const CancelOrderModal: React.FC<CancelOrderModalProps> = ({

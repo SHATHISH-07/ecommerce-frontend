@@ -12,8 +12,8 @@ import LoadingSpinner from "../../components/products/LoadingSpinner";
 import { CANCEL_ORDER, RETURN_ORDER } from "../../graphql/mutations/order";
 import { useAppToast } from "../../utils/useAppToast";
 import { useState } from "react";
-import CancelOrderModal from "../../components/CancelOrderModal";
-import ReturnOrderModal from "../../components/ReturnOrderModal";
+import CancelOrderModal from "../../components/order/CancelOrderModal";
+import ReturnOrderModal from "../../components/order/ReturnOrderModal";
 
 interface Product {
   externalProductId: number;

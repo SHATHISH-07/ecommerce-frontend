@@ -10,11 +10,15 @@ import type {
   PlaceOrderFromCartResponse,
   ShippingAddress,
 } from "../../types/order";
-import type { PaymentMethod } from "../PlaceOrderForm";
+import type { PaymentMethod } from "../order/PlaceOrderForm";
+import { useAppToast } from "../../utils/useAppToast";
+import { ShoppingCart } from "lucide-react";
 
 const CartCheckoutPage = () => {
   const user = useSelector((state: RootState) => state.user.user);
   const navigate = useNavigate();
+
+  const { toastSuccess, toastError } = useAppToast();
 
   const { data: cartData } = useQuery(GET_USER_CART, {
     fetchPolicy: "network-only",
@@ -71,7 +75,7 @@ const CartCheckoutPage = () => {
     if (!user?.email) return;
 
     if (!user.emailVerified) {
-      alert(
+      toastError(
         "Please verify your email in your profile before placing an order."
       );
       return;
@@ -90,12 +94,13 @@ const CartCheckoutPage = () => {
         navigate("/verify-order-otp", {
           state: { email: shippingAddress.email },
         });
+        toastSuccess("Order placed successfully!");
       } else {
-        alert(data?.placeOrderFromCart?.message || "Order failed");
+        toastError(data?.placeOrderFromCart?.message || "Order failed");
       }
     } catch (err) {
       console.error(err);
-      alert("Error placing order from cart");
+      toastError("Error placing order from cart");
     }
   };
 
@@ -105,7 +110,25 @@ const CartCheckoutPage = () => {
   );
 
   if (cartProducts.length === 0) {
-    return <p className="text-center text-gray-500">Your cart is empty.</p>;
+    return (
+      <div className="flex flex-col items-center justify-center h-[80vh] text-center">
+        <div className="w-20 h-20 mb-4 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-300">
+          <ShoppingCart size={32} color="#c9812f" />
+        </div>
+        <p className="text-lg font-medium text-gray-600 dark:text-gray-400">
+          Your Cart is Empty
+        </p>
+        <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
+          Looks like you haven’t added any items yet.
+        </p>
+        <button
+          onClick={() => navigate("/")}
+          className="mt-6 px-6 py-2 bg-gradient-to-r from-[#c9812f] to-blue-500 text-white rounded-lg shadow hover:opacity-90 transition"
+        >
+          Start Shopping
+        </button>
+      </div>
+    );
   }
 
   return (

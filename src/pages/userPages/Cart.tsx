@@ -4,7 +4,7 @@ import { useAppSelector, type RootState } from "../../app/store";
 
 import { GET_USER_CART } from "../../graphql/queries/cart.query";
 import LoadingSpinner from "../../components/products/LoadingSpinner";
-import { ShoppingCart } from "lucide-react";
+import { AlertTriangle, ShoppingCart } from "lucide-react";
 import CartProduct from "../../components/cart/CartProduct";
 
 const Cart = () => {
@@ -23,12 +23,22 @@ const Cart = () => {
       </div>
     );
 
-  if (error)
+  if (error) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-red-500">Failed to load cart.</p>
+      <div className="flex flex-col items-center justify-center my-20 p-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg max-w-lg mx-auto text-center">
+        <AlertTriangle className="text-red-500 w-12 h-12 mb-4" />
+        <h3 className="text-xl font-semibold text-red-800 dark:text-red-300">
+          Oops! Something went wrong.
+        </h3>
+        <p className="text-red-600 dark:text-red-400 mt-2">
+          We couldn't load the categories. Please try again later.
+        </p>
+        <p className="text-xs text-gray-500 mt-4 italic">
+          Error: {error.message}
+        </p>
       </div>
     );
+  }
 
   const cart = data?.getUserCart;
   const cartProducts = cart?.products ?? [];

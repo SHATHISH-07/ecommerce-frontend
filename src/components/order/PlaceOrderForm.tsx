@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
-import { PLACE_ORDER } from "../graphql/mutations/order";
+import { PLACE_ORDER } from "../../graphql/mutations/order";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import type { RootState } from "../app/store";
-import { useAppToast } from "../utils/useAppToast";
+import type { RootState } from "../../app/store";
+import { useAppToast } from "../../utils/useAppToast";
 
 export type PaymentMethod = "Cash_on_Delivery" | "Card" | "UPI" | "NetBanking";
 

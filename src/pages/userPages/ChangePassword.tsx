@@ -3,7 +3,7 @@ import { useMutation } from "@apollo/client";
 import { RESET_PASSWORD } from "../../graphql/mutations/auth";
 import { useNavigate } from "react-router-dom";
 import { useAppToast } from "../../utils/useAppToast";
-import { Eye, EyeOff } from "lucide-react"; // optional icon library
+import { Eye, EyeOff } from "lucide-react";
 
 const ChangePassword = () => {
   const [newPassword, setNewPassword] = useState("");

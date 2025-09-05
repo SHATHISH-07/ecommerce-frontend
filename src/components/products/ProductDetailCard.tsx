@@ -16,7 +16,7 @@ import { useMutation } from "@apollo/client";
 import { ADD_TO_CART } from "../../graphql/mutations/cart";
 import { GET_USER_CART_COUNT } from "../../graphql/queries/cart.query";
 import { useAppToast } from "../../utils/useAppToast";
-import FullscreenImageModal from "../FullScreenImageModal";
+import FullscreenImageModal from "./FullScreenImageModal";
 import { useNavigate } from "react-router-dom";
 
 interface ProductDetailCardProps {

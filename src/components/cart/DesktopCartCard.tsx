@@ -29,7 +29,7 @@ const DesktopCartCard = ({
 
   const navigate = useNavigate();
 
-  const { toastSuccess } = useAppToast();
+  const { toastSuccess, toastError } = useAppToast();
 
   const handleQuantityChange = async (newQty: number) => {
     try {
@@ -38,6 +38,7 @@ const DesktopCartCard = ({
       });
     } catch (err) {
       console.error("Error updating cart quantity:", err);
+      toastError("Error updating cart quantity");
     }
   };
 

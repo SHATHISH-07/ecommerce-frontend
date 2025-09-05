@@ -7,6 +7,8 @@ import {
 } from "../ui/collapsible";
 import type { UserType } from "../../types/User";
 import { useNavigate } from "react-router-dom";
+import LoadingSpinner from "../products/LoadingSpinner";
+import { AlertTriangle } from "lucide-react";
 
 interface Product {
   id: number;
@@ -30,13 +32,41 @@ const ProfileOrderHistory = ({ user }: { user: UserType | null }) => {
 
   const { loading, error, data } = useQuery<QueryResult>(GET_PRODUCTS_BY_IDS, {
     variables: { ids: productIds },
-    skip: productIds.length === 0, // don't run if no ids
+    skip: productIds.length === 0,
   });
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
-  if (!data || data.getProductsByIds.length === 0)
-    return <div>No products found in your history.</div>;
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center my-20 p-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg max-w-lg mx-auto text-center">
+        <AlertTriangle className="text-red-500 w-12 h-12 mb-4" />
+        <h3 className="text-xl font-semibold text-red-800 dark:text-red-300">
+          Oops! Something went wrong.
+        </h3>
+        <p className="text-red-600 dark:text-red-400 mt-2">
+          We couldn't load the Order History. Please try again later.
+        </p>
+        <p className="text-xs text-gray-500 mt-4 italic">
+          Error: {error.message}
+        </p>
+      </div>
+    );
+  }
+  if (!data || data.getProductsByIds.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center my-20 p-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg max-w-lg mx-auto text-center">
+        <p className="text-red-600 dark:text-red-400 mt-2">
+          We couldn't find any Order History. Buy some products.
+        </p>
+      </div>
+    );
+  }
 
   const products = data.getProductsByIds;
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAppToast } from "../utils/useAppToast";
+import { useAppToast } from "../../utils/useAppToast";
 
 interface ProductSummary {
   externalProductId: number;

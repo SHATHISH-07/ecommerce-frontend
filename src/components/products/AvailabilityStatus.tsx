@@ -6,7 +6,6 @@ import {
 } from "lucide-react";
 import type { ForwardRefExoticComponent, RefAttributes } from "react";
 
-// 1. Define a type for the configuration of each status
 type StatusDetail = {
   Icon: ForwardRefExoticComponent<
     Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
@@ -15,7 +14,6 @@ type StatusDetail = {
   text: string;
 };
 
-// 2. Define the type for the main config object using Record<string, StatusDetail>
 const statusConfig: Record<string, StatusDetail> = {
   "In Stock": { Icon: CheckCircle2, color: "text-green-600", text: "In Stock" },
   "Low Stock": {
@@ -30,13 +28,11 @@ const statusConfig: Record<string, StatusDetail> = {
   },
 };
 
-// 3. Define the component's props for clarity
 interface AvailabilityStatusProps {
   status: string;
 }
 
 const AvailabilityStatus = ({ status }: AvailabilityStatusProps) => {
-  // This line will now work without an error
   const config = statusConfig[status] || {
     Icon: AlertTriangle,
     color: "text-gray-500",

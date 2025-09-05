@@ -8,7 +8,7 @@ import { useAppToast } from "../../utils/useAppToast";
 const SignUp = () => {
   const navigate = useNavigate();
 
-  const { toastError } = useAppToast();
+  const { toastSuccess, toastError } = useAppToast();
 
   const [step, setStep] = useState<number>(1);
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -47,10 +47,9 @@ const SignUp = () => {
         variables: { input: formData },
       });
 
-      // console.log("Signup response:", data);
-
       if (data?.signup?.success) {
         setSuccessMessage("Account created! Please verify your email.");
+        toastSuccess("Account created! Please verify your email.");
         navigate("/verify-email", { state: { email: formData.email } });
         localStorage.setItem("signupEmail", formData.email);
       } else {
@@ -58,6 +57,7 @@ const SignUp = () => {
       }
     } catch (err) {
       console.error("Signup error:", err);
+      toastError("Failed to create account");
     }
   };
 

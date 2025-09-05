@@ -35,6 +35,7 @@ const ProductsByCategory = () => {
         <LoadingSpinner />
       </div>
     );
+
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center my-20 p-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg max-w-lg mx-auto text-center">

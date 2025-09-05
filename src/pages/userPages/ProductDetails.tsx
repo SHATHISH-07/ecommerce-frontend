@@ -42,7 +42,17 @@ const ProductDetails = () => {
   const product = data?.getProductById;
 
   if (!product) {
-    return <p className="text-center mt-10">Product not found</p>;
+    return (
+      <div className="flex flex-col items-center justify-center my-20 p-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg max-w-lg mx-auto text-center">
+        <AlertTriangle className="text-red-500 w-12 h-12 mb-4" />
+        <h3 className="text-xl font-semibold text-red-800 dark:text-red-300">
+          Oops! Something went wrong.
+        </h3>
+        <p className="text-red-600 dark:text-red-400 mt-2">
+          We couldn't find the product. Please try again later.
+        </p>
+      </div>
+    );
   }
 
   return (

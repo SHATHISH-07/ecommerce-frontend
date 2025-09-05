@@ -6,6 +6,7 @@ import {
   VERIFY_EMAIL_UPDATE_OTP,
 } from "../../graphql/mutations/auth";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useAppToast } from "../../utils/useAppToast";
 
 const VerifyEmail = () => {
   const [otp, setOtp] = useState("");
@@ -15,6 +16,8 @@ const VerifyEmail = () => {
     type: "success" | "error";
     text: string;
   } | null>(null);
+
+  const { toastSuccess, toastError } = useAppToast();
 
   const isSignupFlow = !!localStorage.getItem("signupEmail");
 
@@ -74,6 +77,7 @@ const VerifyEmail = () => {
             type: "error",
             text: "No email found for verification.",
           });
+          toastError("No email found for verification.");
           return;
         }
         const res = await verifySignupOtp({ variables: { email, otp } });
@@ -93,15 +97,20 @@ const VerifyEmail = () => {
         localStorage.removeItem("otpResendCount");
         setMessage({ type: "success", text: "Email verified successfully!" });
 
+        toastSuccess("Email verified successfully!");
         setTimeout(() => navigate("/login"), 1500);
       } else {
         setMessage({ type: "error", text: "Invalid OTP. Try again." });
+
+        toastError("Invalid OTP. Try again.");
       }
     } catch (err: unknown) {
       setMessage({
         type: "error",
         text: err instanceof Error ? err.message : "Verification failed",
       });
+
+      toastError("Verification failed");
     }
   };
 
@@ -116,11 +125,13 @@ const VerifyEmail = () => {
       setResendCount((prev) => prev + 1);
       setCooldown(60);
       setMessage({ type: "success", text: "OTP resent successfully!" });
+      toastSuccess("OTP resent successfully!");
     } catch (err: unknown) {
       setMessage({
         type: "error",
         text: err instanceof Error ? err.message : "Failed to resend OTP",
       });
+      toastError("Failed to resend OTP");
     }
   };
 

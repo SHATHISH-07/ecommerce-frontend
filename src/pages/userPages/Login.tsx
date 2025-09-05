@@ -8,6 +8,7 @@ import { setCurrentUser } from "../../app/slices/userSlice";
 import type { LoginInput } from "../../graphql/types/auth.types";
 import { refetchAndStoreUser } from "../../utils/refetchUser";
 import { Eye, EyeOff } from "lucide-react";
+import { useAppToast } from "../../utils/useAppToast";
 
 const Login = () => {
   const [formData, setFormData] = useState<LoginInput>({
@@ -20,6 +21,8 @@ const Login = () => {
   const client = useApolloClient();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
+  const { toastSuccess, toastError } = useAppToast();
 
   const [login, { loading, error }] = useMutation(LOGIN_MUTATION);
 
@@ -58,10 +61,12 @@ const Login = () => {
         }
 
         setSuccessMessage("Login successful! Redirecting...");
+        toastSuccess("Login successful!");
         setTimeout(() => navigate("/"), 1500);
       }
     } catch (err) {
       console.error("Login failed:", err);
+      toastError("Login failed. Please try again.");
     }
   };
 
