@@ -11,11 +11,14 @@ import LoadingSpinner from "../../components/products/LoadingSpinner";
 import ResponsiveProductCard from "../../components/products/ResponsiveProductCard";
 import CartProductCard from "../../components/products/CartProductCard";
 import { AlertTriangle, PartyPopper, ShoppingCart } from "lucide-react";
+import { useState } from "react";
 
 const Products = () => {
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get("search");
   const LIMIT = 10;
+
+  const [fetchingMore, setFetchingMore] = useState(false);
 
   const navigate = useNavigate();
 
@@ -43,30 +46,35 @@ const Products = () => {
     skip: !user,
   });
 
-  const handleLoadMore = () => {
+  const handleLoadMore = async () => {
     const results = data?.getAllProducts || data?.searchProducts;
     if (!results) return;
 
-    fetchMore({
-      variables: {
-        skip: results.products.length,
-      },
-      updateQuery: (prevResult, { fetchMoreResult }) => {
-        const dataKey = isSearching ? "searchProducts" : "getAllProducts";
+    try {
+      setFetchingMore(true);
+      await fetchMore({
+        variables: {
+          skip: results.products.length,
+        },
+        updateQuery: (prevResult, { fetchMoreResult }) => {
+          const dataKey = isSearching ? "searchProducts" : "getAllProducts";
 
-        if (!fetchMoreResult || !fetchMoreResult[dataKey]) {
-          return prevResult;
-        }
+          if (!fetchMoreResult || !fetchMoreResult[dataKey]) {
+            return prevResult;
+          }
 
-        const newProducts = fetchMoreResult[dataKey].products;
-        return {
-          [dataKey]: {
-            ...prevResult[dataKey],
-            products: [...prevResult[dataKey].products, ...newProducts],
-          },
-        };
-      },
-    });
+          const newProducts = fetchMoreResult[dataKey].products;
+          return {
+            [dataKey]: {
+              ...prevResult[dataKey],
+              products: [...prevResult[dataKey].products, ...newProducts],
+            },
+          };
+        },
+      });
+    } finally {
+      setFetchingMore(false);
+    }
   };
 
   if (loading && !data)
@@ -124,7 +132,7 @@ const Products = () => {
                   disabled={loading}
                   className=" text-white px-6 py-2 rounded-lg disabled:bg-gray-400 bg-gradient-to-r from-[#c9812f] to-blue-500 cursor-pointer "
                 >
-                  {loading ? "Loading..." : "Load More"}
+                  {fetchingMore ? "Loading..." : "Load More"}
                 </button>
               </div>
             )}
