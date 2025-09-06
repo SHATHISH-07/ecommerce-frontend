@@ -66,7 +66,7 @@ const MobileCartCard = ({
   return (
     <div
       onClick={() => navigate(`/products/${product.id}`)}
-      className="flex flex-col border border-gray-300 rounded-lg overflow-hidden shadow-md bg-white dark:bg-black"
+      className="flex flex-col border border-gray-300 rounded-lg overflow-hidden shadow-md bg-white dark:bg-black h-full"
     >
       {/* Image */}
       <img
@@ -76,10 +76,9 @@ const MobileCartCard = ({
       />
 
       {/* Content */}
-      <div className="flex flex-col p-4">
+      <div className="flex flex-col p-4 flex-grow">
         <div className="flex justify-between items-start">
           <h3 className="text-lg font-semibold truncate">{product.title}</h3>
-          {/* Remove button */}
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -115,17 +114,19 @@ const MobileCartCard = ({
           />
         </div>
 
-        {/* Buy Now Button */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleBuyNow();
-          }}
-          className="flex items-center justify-center gap-2 text-white px-4 py-2 rounded-lg bg-gradient-to-r from-[#c9812f] to-blue-500 cursor-pointer font-semibold"
-        >
-          <ShoppingCart size={18} />
-          <span>Buy Now</span>
-        </button>
+        {/* Push button to bottom */}
+        <div className="mt-auto">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleBuyNow();
+            }}
+            className="flex items-center justify-center gap-2 text-white px-4 py-2 rounded-lg bg-gradient-to-r from-[#c9812f] to-blue-500 cursor-pointer font-semibold w-full"
+          >
+            <ShoppingCart size={18} />
+            <span>Buy Now</span>
+          </button>
+        </div>
       </div>
     </div>
   );

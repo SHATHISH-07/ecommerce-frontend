@@ -6,7 +6,7 @@ import DesktopProductCard from "./DesktopProductCard";
 const ResponsiveProductCard = ({ product }: { product: Product }) => {
   return (
     <>
-      <div className="lg:hidden">
+      <div className="lg:hidden ">
         <MobileProductCard product={product} />
       </div>
 

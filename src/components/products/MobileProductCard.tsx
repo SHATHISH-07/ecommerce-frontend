@@ -43,20 +43,23 @@ const MobileProductCard = ({ product }: { product: Product }) => {
 
   return (
     <div
-      className="flex flex-col overflow-hidden rounded-lg border shadow-lg transition-shadow duration-300 hover:shadow-xl cursor-pointer"
+      className="flex flex-col overflow-hidden rounded-lg border shadow-lg transition-shadow duration-300 hover:shadow-xl cursor-pointer h-full"
       onClick={() => navigate(`/products/${product.id}`)}
     >
+      {/* Image */}
       <img
         src={product.thumbnail}
         alt={product.title}
         className="h-48 w-full object-cover"
       />
-      <div className="flex flex-grow flex-col p-4">
+
+      {/* Content */}
+      <div className="flex flex-col flex-grow p-4">
         <h3 className="text-lg font-semibold mb-2 line-clamp-2">
           {product.title}
         </h3>
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 flex-grow">
           {/* Price Section */}
           <div className="flex flex-wrap items-baseline gap-x-2">
             <p className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -70,7 +73,7 @@ const MobileProductCard = ({ product }: { product: Product }) => {
             </span>
           </div>
 
-          {/* Rating */}
+          {/* Rating + Quantity */}
           <div className="flex items-center gap-3 text-sm text-yellow-500">
             <p className="flex items-center gap-1">
               {product.rating != null ? product.rating.toFixed(1) : "N/A"}{" "}
@@ -103,15 +106,15 @@ const MobileProductCard = ({ product }: { product: Product }) => {
             </div>
           </div>
 
-          {/* Quantity + Add to Cart */}
-          <div className="flex flex-col items-center gap-3">
+          {/* Push button to bottom */}
+          <div className="mt-auto flex justify-center">
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 handleAddToCart();
               }}
               disabled={loading}
-              className="flex items-center justify-center gap-2 text-white px-4 py-2 rounded-lg bg-gradient-to-r from-[#c9812f] to-blue-500 cursor-pointer font-semibold disabled:opacity-50"
+              className="flex items-center justify-center gap-2 text-white px-4 py-2 rounded-lg bg-gradient-to-r from-[#c9812f] to-blue-500 cursor-pointer font-semibold disabled:opacity-50 w-full"
             >
               {loading ? "Adding..." : "Add to Cart"}
             </button>
