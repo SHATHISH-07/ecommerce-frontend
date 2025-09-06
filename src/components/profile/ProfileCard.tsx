@@ -1,5 +1,6 @@
 import { BadgeX, UserCheck, UserX, Verified } from "lucide-react";
 import { type UserType } from "../../types/User";
+import logo from "/logo.svg";
 
 interface ProfileCardProps {
   user: UserType;
@@ -10,7 +11,7 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
     <div className="flex flex-col justify-start items-center w-full sm:w-[90%] md:w-[400px] h-auto lg:h-[85vh] rounded-md bg-white dark:bg-black signup-shadow p-5 md:p-0">
       <div className="rounded-full mt-5 avatar-shadow">
         <img
-          src="/logo.svg"
+          src={logo}
           alt="NxKart"
           className="bg-white dark:bg-black p-4 w-35 h-35 rounded-full object-contain"
         />
