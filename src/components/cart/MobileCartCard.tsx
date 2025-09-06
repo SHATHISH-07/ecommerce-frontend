@@ -72,7 +72,7 @@ const MobileCartCard = ({
       <img
         src={product.thumbnail}
         alt={product.title}
-        className="h-48 w-full object-cover"
+        className="h-48 w-full object-contain"
       />
 
       {/* Content */}
@@ -90,12 +90,8 @@ const MobileCartCard = ({
           </button>
         </div>
 
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-          {product.category}
-        </p>
-
         {/* Price */}
-        <div className="flex items-baseline gap-2 mb-3">
+        <div className="flex items-baseline overflow-hidden gap-2 mb-3">
           <p className="text-xl font-bold text-gray-900 dark:text-white">
             ${product.price.toFixed(2)}
           </p>

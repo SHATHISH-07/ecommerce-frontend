@@ -22,7 +22,7 @@ const HeroBanner = ({ images, interval = 3000 }: BannerProps) => {
   return (
     <div className="w-full mt-5 mb-10">
       {/* Banner Section (just the image) */}
-      <div className="relative w-full h-[50vh] md:h-[55vh] mx-auto overflow-hidden rounded-2xl">
+      <div className="relative w-full h-[48vh] md:h-[55vh] mx-auto overflow-hidden rounded-2xl">
         {images.map((img, i) => (
           <img
             key={i}

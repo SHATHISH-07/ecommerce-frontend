@@ -1,6 +1,5 @@
 import { Star } from "lucide-react";
 import type { Product } from "../../types/products";
-import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { ADD_TO_CART } from "../../graphql/mutations/cart";
 import { GET_USER_CART_COUNT } from "../../graphql/queries/cart.query";
@@ -8,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import { useAppToast } from "../../utils/useAppToast";
 
 const MobileProductCard = ({ product }: { product: Product }) => {
-  const [quantity, setQuantity] = useState(1);
   const [addToCart, { loading }] = useMutation(ADD_TO_CART, {
     refetchQueries: [{ query: GET_USER_CART_COUNT }],
     awaitRefetchQueries: true,
@@ -25,7 +23,6 @@ const MobileProductCard = ({ product }: { product: Product }) => {
         variables: {
           input: {
             productId: product.id,
-            quantity,
           },
         },
       });
@@ -46,12 +43,18 @@ const MobileProductCard = ({ product }: { product: Product }) => {
       className="flex flex-col overflow-hidden rounded-lg border shadow-lg transition-shadow duration-300 hover:shadow-xl cursor-pointer h-full"
       onClick={() => navigate(`/products/${product.id}`)}
     >
-      {/* Image */}
-      <img
-        src={product.thumbnail}
-        alt={product.title}
-        className="h-48 w-full object-cover"
-      />
+      {/* Image wrapper with rating badge */}
+      <div className="relative">
+        <img
+          src={product.thumbnail}
+          alt={product.title}
+          className="h-48 w-full object-cover"
+        />
+        <div className="absolute top-2 left-2  text-yellow-400 text-xs font-semibold px-2 py-1 rounded-md flex items-center gap-1">
+          {product.rating != null ? product.rating.toFixed(1) : "N/A"}
+          <Star size={14} fill="yellow" className="text-yellow-400" />
+        </div>
+      </div>
 
       {/* Content */}
       <div className="flex flex-col flex-grow p-4">
@@ -71,39 +74,6 @@ const MobileProductCard = ({ product }: { product: Product }) => {
             <span className="text-sm font-semibold text-green-600">
               {Math.round(product.discountPercentage)}% off
             </span>
-          </div>
-
-          {/* Rating + Quantity */}
-          <div className="flex items-center gap-3 text-sm text-yellow-500">
-            <p className="flex items-center gap-1">
-              {product.rating != null ? product.rating.toFixed(1) : "N/A"}{" "}
-              <Star size={16} fill="yellow" />
-            </p>
-            <div className="flex items-center gap-1 text-sm">
-              <div className="flex items-center gap-2 border border-gray-800 dark:border-gray-300 rounded-md px-2 py-1 w-fit">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setQuantity((prev) => Math.max(1, prev - 1));
-                  }}
-                  className="px-2 py-1 text-lg font-bold text-gray-700 dark:text-gray-300 cursor-pointer"
-                >
-                  -
-                </button>
-                <span className="min-w-[2ch] text-black dark:text-white text-center">
-                  {quantity}
-                </span>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setQuantity((prev) => Math.min(10, prev + 1));
-                  }}
-                  className="px-2 py-1 text-lg font-bold text-gray-700 dark:text-gray-300 cursor-pointer"
-                >
-                  +
-                </button>
-              </div>
-            </div>
           </div>
 
           {/* Push button to bottom */}

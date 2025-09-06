@@ -58,7 +58,7 @@ const Cart = () => {
               Save your favorite items here.
             </p>
           </div>
-          <div className="grid grid-cols-1 [@media(min-width:352px)_and_(max-width:639px)]:grid-cols-2 sm:grid-cols-2 lg:grid-cols-1 gap-2">
+          <div className="grid grid-cols-1 [@media(min-width:420px)_and_(max-width:639px)]:grid-cols-2 sm:grid-cols-2 lg:grid-cols-1 gap-2">
             {cartProducts.map(
               (item: { productId: number; quantity: number }) => (
                 <CartProduct
