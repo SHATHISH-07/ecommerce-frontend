@@ -25,7 +25,7 @@ const HomeCategorySection = () => {
 
   const scroll = (dir: "left" | "right") => {
     if (scrollRef.current) {
-      const scrollAmount = 300; // adjust scroll distance
+      const scrollAmount = 300;
       scrollRef.current.scrollBy({
         left: dir === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
