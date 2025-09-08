@@ -70,13 +70,18 @@ const AccountSettings = () => {
     });
   };
 
+  const handleLogout = () => {
+    dispatch(clearUser());
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
   return (
     <div className="flex flex-col md:flex-row items-center justify-center gap-5 m-10">
       <button
         className="w-48 py-2 px-4 rounded-lg border border-red-500 text-red-500 font-medium hover:bg-red-500 cursor-pointer hover:text-white transition"
         onClick={() => {
-          localStorage.clear();
-          window.location.href = "/login";
+          handleLogout();
         }}
       >
         Sign Out

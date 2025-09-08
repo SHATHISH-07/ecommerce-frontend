@@ -57,12 +57,19 @@ const Login = () => {
         });
 
         if (userData?.getCurrentUser) {
-          dispatch(setCurrentUser(userData.getCurrentUser));
+          const currentUser = userData.getCurrentUser;
+          dispatch(setCurrentUser(currentUser));
         }
 
         setSuccessMessage("Login successful! Redirecting...");
         toastSuccess("Login successful!");
-        setTimeout(() => navigate("/"), 1500);
+        if (userData?.getCurrentUser?.role === "admin") {
+          navigate("/admin", { replace: true });
+        } else {
+          setTimeout(() => {
+            navigate("/", { replace: true });
+          }, 1500);
+        }
       }
     } catch (err) {
       console.error("Login failed:", err);

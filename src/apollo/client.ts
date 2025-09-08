@@ -4,7 +4,8 @@ import { onError } from "@apollo/client/link/error";
 
 // GraphQL endpoint
 const httpLink = createHttpLink({
-    uri: "https://ecommerce-backend-j210.onrender.com/graphql",
+    // uri: "https://ecommerce-backend-j210.onrender.com/graphql",
+    uri: "http://localhost:4000/graphql",
 });
 
 

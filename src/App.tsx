@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { useAuth } from "./hooks/useAuth";
 import NavBar from "./components/navbar/NavBar";
 import Home from "./pages/userPages/Home";
@@ -27,21 +27,31 @@ import CartCheckoutPage from "./components/cart/CartCheckoutPage";
 import ForgetPassword from "./pages/userPages/ForgetPassword";
 import PasswordVerify from "./pages/userPages/PasswordVerify";
 import ChangePassword from "./pages/userPages/ChangePassword";
+import LoadingSpinner from "./components/products/LoadingSpinner";
+import AdminLayout from "./components/admin/AdminLayout";
+import AllProducts from "./pages/adminPages/AllProducts";
+import EditProduct from "./pages/adminPages/EditProduct";
 
 const App = () => {
   const { user, loading } = useAuth();
 
   if (loading)
-    return <div className="h-screen flex justify-center items-center">...</div>;
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <LoadingSpinner />
+      </div>
+    );
 
   if (user?.role === "admin") {
     return (
       <>
-        <NavBar />
-        <Routes>
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="*" element={<Navigate to="/admin" replace />} />
-        </Routes>
+        <AdminLayout>
+          <Routes>
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/products" element={<AllProducts />} />
+            <Route path="/admin/products/edit/:id" element={<EditProduct />} />
+          </Routes>
+        </AdminLayout>
         <Toaster />
       </>
     );
