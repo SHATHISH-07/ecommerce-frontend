@@ -70,6 +70,23 @@ query GetProductById($id: Int!) {
         title
         description
         category
+        brand
+        dimensions{
+          width
+          height
+          depth
+        }
+        stock
+        minimumOrderQuantity
+        tags
+        images
+        weight
+        meta{
+          createdAt
+        updatedAt
+        barcode
+        qrCode
+        }
         price
         discountPercentage
         rating
@@ -77,6 +94,13 @@ query GetProductById($id: Int!) {
         availabilityStatus
         returnPolicy
         thumbnail
+        reviews{
+          comment
+          date
+          rating
+          reviewerEmail
+          reviewerName
+        }
     }
   }
 `

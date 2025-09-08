@@ -67,3 +67,4 @@ export interface DetailedProduct {
     thumbnail: string;
     reviews?: Review[];
 }
+
