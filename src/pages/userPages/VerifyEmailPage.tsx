@@ -136,69 +136,71 @@ const VerifyEmail = () => {
   };
 
   return (
-    <div className="min-h-screen flex justify-center p-6">
-      <form
-        className="bg-white dark:bg-black p-6 rounded-lg signup-shadow max-w-md w-full"
-        onSubmit={handleVerify}
-      >
-        <h2 className="text-xl font-bold text-center text-gray-700 dark:text-gray-300 mb-6">
-          Verify Your Email
-        </h2>
-
-        <input
-          type="text"
-          value={otp}
-          onChange={(e) => setOtp(e.target.value)}
-          maxLength={6}
-          placeholder="Enter 6-digit OTP"
-          className="w-full border border-gray-300 p-2 rounded text-center tracking-[0.5em] text-2xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        />
-
-        <button
-          type="submit"
-          disabled={loading || updateLoading}
-          className="mt-4 w-full py-2 font-semibold border bg-gradient-to-r from-[#c9812f] to-blue-500 border-gray-300 text-white rounded cursor-pointer"
+    <div className="h-100">
+      <div className="flex justify-center p-6 mt-20">
+        <form
+          className="bg-white dark:bg-black p-6 rounded-lg signup-shadow max-w-md w-full"
+          onSubmit={handleVerify}
         >
-          {loading || updateLoading ? "Verifying..." : "Verify"}
-        </button>
+          <h2 className="text-xl font-bold text-center text-gray-700 dark:text-gray-300 mb-6">
+            Verify Your Email
+          </h2>
 
-        {/* Success/Error Message */}
-        {message && (
-          <p
-            className={`mt-3 text-center font-medium ${
-              message.type === "success" ? "text-green-600" : "text-red-500"
-            }`}
+          <input
+            type="text"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            maxLength={6}
+            placeholder="Enter 6-digit OTP"
+            className="w-full border border-gray-300 p-2 rounded text-center tracking-[0.5em] text-lg md:text-2xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+
+          <button
+            type="submit"
+            disabled={loading || updateLoading}
+            className="mt-4 w-full py-2 font-semibold border bg-gradient-to-r from-[#c9812f] to-blue-500 border-gray-300 text-white rounded cursor-pointer"
           >
-            {message.text}
-          </p>
-        )}
+            {loading || updateLoading ? "Verifying..." : "Verify"}
+          </button>
 
-        {/* Resend OTP Section */}
-        <div className="text-center mt-3">
-          <p className="text-sm text-gray-600 dark:text-gray-300">
-            Didn’t get the OTP?{" "}
-            <span
-              onClick={
-                cooldown > 0 || resendCount >= 5 || resendLoading
-                  ? undefined
-                  : handleResendOtp
-              }
-              className={`font-semibold cursor-pointer ${
-                cooldown > 0 || resendCount >= 5 || resendLoading
-                  ? "text-gray-400 cursor-not-allowed"
-                  : "text-blue-500 hover:underline"
+          {/* Success/Error Message */}
+          {message && (
+            <p
+              className={`mt-3 text-center font-medium ${
+                message.type === "success" ? "text-green-600" : "text-red-500"
               }`}
             >
-              {resendCount >= 5
-                ? "Limit Reached"
-                : cooldown > 0
-                ? `Resend in ${cooldown}s`
-                : "Resend OTP"}
-            </span>
-          </p>
-        </div>
-      </form>
+              {message.text}
+            </p>
+          )}
+
+          {/* Resend OTP Section */}
+          <div className="text-center mt-3">
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              Didn’t get the OTP?{" "}
+              <span
+                onClick={
+                  cooldown > 0 || resendCount >= 5 || resendLoading
+                    ? undefined
+                    : handleResendOtp
+                }
+                className={`font-semibold cursor-pointer ${
+                  cooldown > 0 || resendCount >= 5 || resendLoading
+                    ? "text-gray-400 cursor-not-allowed"
+                    : "text-blue-500 hover:underline"
+                }`}
+              >
+                {resendCount >= 5
+                  ? "Limit Reached"
+                  : cooldown > 0
+                  ? `Resend in ${cooldown}s`
+                  : "Resend OTP"}
+              </span>
+            </p>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

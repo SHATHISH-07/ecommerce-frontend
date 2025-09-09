@@ -35,30 +35,32 @@ const PasswordVerify = () => {
   };
 
   return (
-    <div className="min-h-screen flex justify-center p-6">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white dark:bg-black p-6 rounded-lg space-y-4 signup-shadow w-full max-w-md"
-      >
-        <h2 className="text-xl font-semibold text-center text-gray-700 dark:text-gray-300">
-          Verify OTP
-        </h2>
-        <input
-          type="text"
-          placeholder="Enter OTP"
-          value={otp}
-          onChange={(e) => setOtp(e.target.value)}
-          className="w-full border text-center tracking-[0.5rem] text-2xl p-2 rounded outline-none border-gray-300 dark:border-gray-600"
-          required
-        />
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full py-2 cursor-pointer rounded bg-gradient-to-r from-[#c9812f] to-blue-500 text-white font-semibold hover:opacity-90 transition"
+    <div className="h-100">
+      <div className="flex justify-center p-6 mt-20">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white dark:bg-black p-6 rounded-lg space-y-4 signup-shadow w-full max-w-md"
         >
-          {loading ? "Verifying..." : "Verify OTP"}
-        </button>
-      </form>
+          <h2 className="text-xl font-semibold text-center text-gray-700 dark:text-gray-300">
+            Verify OTP
+          </h2>
+          <input
+            type="text"
+            placeholder="Enter OTP"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            className="w-full border text-center tracking-[0.5rem] text-2xl p-2 rounded outline-none border-gray-300 dark:border-gray-600"
+            required
+          />
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-2 cursor-pointer rounded bg-gradient-to-r from-[#c9812f] to-blue-500 text-white font-semibold hover:opacity-90 transition"
+          >
+            {loading ? "Verifying..." : "Verify OTP"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
