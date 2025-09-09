@@ -148,18 +148,18 @@ const PlaceOrderPage = () => {
                     {p.title}
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Price: ₹{p.price} × {p.quantity}
+                    Price: ${p.price} × {p.quantity}
                   </p>
                 </div>
                 <p className="font-semibold text-gray-700 dark:text-gray-300">
-                  ₹{(p.price * p.quantity).toFixed(2)}
+                  ${(p.price * p.quantity).toFixed(2)}
                 </p>
               </li>
             ))}
           </ul>
           <div className="flex justify-between items-center font-semibold text-lg text-gray-700 dark:text-gray-300 mt-3">
             <span>Total:</span>
-            <span className="text-blue-600">₹{totalAmount.toFixed(2)}</span>
+            <span className="text-blue-600">${totalAmount.toFixed(2)}</span>
           </div>
         </div>
 

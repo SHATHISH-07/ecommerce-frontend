@@ -160,16 +160,16 @@ const CartCheckoutPage = () => {
                   <p className="text-sm">Qty: {item.quantity}</p>
                 </div>
                 <p>
-                  ₹{item.price} × {item.quantity} ={" "}
+                  ${item.price} × {item.quantity} ={" "}
                   <span className="font-semibold">
-                    ₹{item.totalPrice.toFixed(2)}
+                    ${item.totalPrice.toFixed(2)}
                   </span>
                 </p>
               </div>
             )
           )}
           <div className="text-right font-bold text-lg">
-            Total: ₹{totalAmount.toFixed(2)}
+            Total: ${totalAmount.toFixed(2)}
           </div>
         </div>
 

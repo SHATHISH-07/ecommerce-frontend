@@ -12,9 +12,13 @@ const Cart = () => {
   const user = useAppSelector((state: RootState) => state.user.user);
 
   const { data, loading, error } = useQuery(GET_USER_CART, {
-    fetchPolicy: "network-only",
+    fetchPolicy: "cache-and-network",
     skip: !user,
   });
+
+  const handleCheckout = async () => {
+    await navigate("/cart-checkout", { replace: true });
+  };
 
   if (loading)
     return (
@@ -72,7 +76,7 @@ const Cart = () => {
 
           <div className="flex justify-center md:justify-end mt-6">
             <button
-              onClick={() => navigate("/cart-checkout")}
+              onClick={handleCheckout}
               className="px-6 py-2 font-semibold text-white rounded-lg bg-gradient-to-r from-[#c9812f] to-blue-500 cursor-pointer"
             >
               Proceed to Checkout

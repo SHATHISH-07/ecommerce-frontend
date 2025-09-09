@@ -151,7 +151,7 @@ const AdminDashboard = () => {
               <p className="text-2xl font-bold">
                 {key === "totalRevenue" ? (
                   <>
-                    ₹<CountUpNumber end={stats[key]} />
+                    $<CountUpNumber end={stats[key]} />
                   </>
                 ) : (
                   <CountUpNumber end={stats[key]} />
