@@ -144,7 +144,7 @@ const VerifyOrderPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
+    <div className="min-h-screen flex justify-center p-6">
       <form
         className="bg-white dark:bg-black p-6 rounded-lg signup-shadow max-w-md w-full"
         onSubmit={handleVerify}

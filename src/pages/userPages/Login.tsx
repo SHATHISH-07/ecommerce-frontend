@@ -78,7 +78,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen p-6 flex items-center justify-center">
+    <div className="min-h-screen p-6 flex justify-center">
       <div className="max-w-lg w-full">
         <h2 className="text-3xl font-bold text-center text-gray-700 dark:text-gray-300 my-10">
           Login to NexKart

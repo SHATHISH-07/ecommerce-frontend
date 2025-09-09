@@ -35,7 +35,7 @@ const PasswordVerify = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
+    <div className="min-h-screen flex justify-center p-6">
       <form
         onSubmit={handleSubmit}
         className="bg-white dark:bg-black p-6 rounded-lg space-y-4 signup-shadow w-full max-w-md"

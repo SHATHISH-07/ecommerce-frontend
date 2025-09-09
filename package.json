@@ -20,6 +20,7 @@
     "@radix-ui/react-switch": "^1.2.6",
     "@reduxjs/toolkit": "^2.8.2",
     "@tailwindcss/vite": "^4.1.12",
+    "apollo-upload-client": "^17.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "graphql": "^16.11.0",

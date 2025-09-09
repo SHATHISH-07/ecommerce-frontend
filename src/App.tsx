@@ -31,6 +31,8 @@ import LoadingSpinner from "./components/products/LoadingSpinner";
 import AdminLayout from "./components/admin/AdminLayout";
 import AllProducts from "./pages/adminPages/AllProducts";
 import EditProduct from "./pages/adminPages/EditProduct";
+import AddProduct from "./pages/adminPages/AddProduct";
+import AddBulkProduct from "./pages/adminPages/AddBulkProduct";
 
 const App = () => {
   const { user, loading } = useAuth();
@@ -50,6 +52,11 @@ const App = () => {
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/products" element={<AllProducts />} />
             <Route path="/admin/products/edit/:id" element={<EditProduct />} />
+            <Route path="/admin/products/new" element={<AddProduct />} />
+            <Route
+              path="/admin/products/new/bulk"
+              element={<AddBulkProduct />}
+            />
           </Routes>
         </AdminLayout>
         <Toaster />
