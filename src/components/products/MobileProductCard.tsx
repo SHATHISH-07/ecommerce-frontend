@@ -40,7 +40,7 @@ const MobileProductCard = ({ product }: { product: Product }) => {
 
   return (
     <div
-      className="flex flex-col overflow-hidden rounded-lg border shadow-lg transition-shadow duration-300 hover:shadow-xl cursor-pointer h-full"
+      className="flex flex-col overflow-hidden border border-gray-900 dark:border-gray-600 cursor-pointer h-full"
       onClick={() => navigate(`/products/${product.id}`)}
     >
       {/* Image wrapper with rating badge */}

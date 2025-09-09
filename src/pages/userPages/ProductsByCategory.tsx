@@ -56,16 +56,17 @@ const ProductsByCategory = () => {
   return (
     <div className="flex h-screen">
       {/* Left side - Products */}
-      <div className="w-full md:w-[85%] p-4 overflow-y-auto custom-scrollbar">
-        <h1 className="text-3xl dark:text-gray-300 text-gray-800 font-normal ml-2">
-          Products in {categorySlug}
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400 ml-2 mb-4">
-          Browse all products under this category.
-        </p>
-
+      <div className="w-full md:w-[85%] overflow-y-auto custom-scrollbar">
+        <div className="p-3">
+          <h1 className="text-3xl dark:text-gray-300 text-gray-800 font-normal ml-2">
+            Products in {categorySlug}
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 ml-2 mb-4">
+            Browse all products under this category.
+          </p>
+        </div>
         {products.length > 0 ? (
-          <div className="grid grid-cols-1 [@media(min-width:352px)_and_(max-width:639px)]:grid-cols-2 sm:grid-cols-2 lg:grid-cols-1 gap-2">
+          <div className="grid grid-cols-1 [@media(min-width:352px)_and_(max-width:639px)]:grid-cols-2 sm:grid-cols-2 lg:grid-cols-1">
             {products.map((product: Product) => (
               <ResponsiveProductCard key={product.id} product={product} />
             ))}

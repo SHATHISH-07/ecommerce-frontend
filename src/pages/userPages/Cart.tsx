@@ -44,13 +44,13 @@ const Cart = () => {
   const cartProducts = cart?.products ?? [];
 
   return (
-    <div className="p-4">
+    <div>
       {cartProducts.length > 0 ? (
         <>
-          <div className="mb-4 ml-2">
+          <div className="p-4">
             <h1 className="text-4xl font-normal text-gray-800 dark:text-gray-300">
-              <span>
-                <ShoppingCart size={32} className="inline-block mr-2" />
+              <span className="flex items-center gap-2">
+                <ShoppingCart size={32} />
                 Your Cart
               </span>
             </h1>
@@ -58,7 +58,7 @@ const Cart = () => {
               Save your favorite items here.
             </p>
           </div>
-          <div className="grid grid-cols-1 [@media(min-width:420px)_and_(max-width:639px)]:grid-cols-2 sm:grid-cols-2 lg:grid-cols-1 gap-2">
+          <div className="grid grid-cols-1 [@media(min-width:420px)_and_(max-width:639px)]:grid-cols-2 sm:grid-cols-2 lg:grid-cols-1 ">
             {cartProducts.map(
               (item: { productId: number; quantity: number }) => (
                 <CartProduct

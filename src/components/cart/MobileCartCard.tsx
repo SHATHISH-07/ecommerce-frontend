@@ -66,7 +66,7 @@ const MobileCartCard = ({
   return (
     <div
       onClick={() => navigate(`/products/${product.id}`)}
-      className="flex flex-col border border-gray-300 rounded-lg overflow-hidden shadow-md bg-white dark:bg-black h-full"
+      className="flex flex-col border border-gray-300 overflow-hidden  bg-white dark:bg-black h-full"
     >
       {/* Image */}
       <img
