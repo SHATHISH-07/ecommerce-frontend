@@ -5,6 +5,7 @@ import { GET_PRODUCT_BY_ID } from "../../graphql/queries/products.query";
 import { UPDATE_PRODUCT } from "../../graphql/mutations/product";
 import LoadingSpinner from "../../components/products/LoadingSpinner";
 import { AlertTriangle, Trash2, Plus } from "lucide-react";
+import { useAppToast } from "../../utils/useAppToast";
 
 export interface UpdateDimensionsInput {
   width?: number;
@@ -67,6 +68,8 @@ type ArrayField = "tags" | "images";
 const EditProduct = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+
+  const { toastSuccess, toastError } = useAppToast();
 
   const { data, loading, error } = useQuery<{
     getProductById: DetailedProduct;
@@ -232,18 +235,18 @@ const EditProduct = () => {
       const cleaned = cleanObject(changedFields);
 
       if (Object.keys(cleaned).length === 0) {
-        alert("No changes to update!");
+        toastError("No changes to update!");
         return;
       }
 
       await updateProduct({
         variables: { id: Number(id), input: cleaned },
       });
-      alert("Product updated successfully!");
+      toastSuccess("Product updated successfully!");
       navigate("/admin/products");
     } catch (err) {
       console.error(err);
-      alert("Failed to update product");
+      toastError("Failed to update product");
     }
   };
 
@@ -425,7 +428,7 @@ const EditProduct = () => {
 
         <button
           type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="border border-blue-600 dark:text-white text-black hover:text-white cursor-pointer px-4 py-2 rounded hover:bg-blue-700"
         >
           Update Product
         </button>

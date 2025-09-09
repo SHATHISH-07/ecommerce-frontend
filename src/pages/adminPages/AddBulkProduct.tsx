@@ -2,9 +2,12 @@ import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { UPLOAD_BULK_PRODUCTS } from "../../graphql/mutations/product";
 import { File } from "lucide-react";
+import { useAppToast } from "../../utils/useAppToast";
 
 const AddBulkProduct = () => {
   const [file, setFile] = useState<File | null>(null);
+
+  const { toastSuccess, toastError } = useAppToast();
 
   const [uploadBulkProducts, { loading, error, data }] = useMutation(
     UPLOAD_BULK_PRODUCTS,
@@ -24,13 +27,15 @@ const AddBulkProduct = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) {
-      alert("Please select a JSON file.");
+      toastError("Please select a JSON file.");
       return;
     }
     try {
       await uploadBulkProducts({ variables: { file } });
+      toastSuccess("Bulk products uploaded successfully!");
     } catch (err) {
       console.error("Upload failed", err);
+      toastError("Upload failed");
     }
   };
 
@@ -68,7 +73,7 @@ const AddBulkProduct = () => {
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:bg-gray-400"
+          className="border border-blue-600 dark:text-white text-black hover:text-white cursor-pointer py-2 rounded hover:bg-blue-700 disabled:bg-gray-400"
         >
           {loading ? "Uploading..." : "Upload"}
         </button>

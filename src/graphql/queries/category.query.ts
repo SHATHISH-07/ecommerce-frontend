@@ -9,6 +9,16 @@ query GetAllCategory{
   }
 }`
 
+export const SEARCH_CATEGORY_BY_SLUG = gql`
+  query searchByCategory($categorySlug: String!) {
+    searchByCategory(categorySlug: $categorySlug) {
+      name
+      slug
+      thumbnail
+    }
+  }
+`;
+
 export const GET_PRODUCTS_BY_CATEGORY = gql`
   query GetProductsByCategory($categorySlug: String!) {
     getProductsByCategory(categorySlug: $categorySlug) {

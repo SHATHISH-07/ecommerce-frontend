@@ -33,6 +33,10 @@ import AllProducts from "./pages/adminPages/AllProducts";
 import EditProduct from "./pages/adminPages/EditProduct";
 import AddProduct from "./pages/adminPages/AddProduct";
 import AddBulkProduct from "./pages/adminPages/AddBulkProduct";
+import AllCategory from "./pages/adminPages/AllCategory";
+import EditCategory from "./pages/adminPages/EditCategory";
+import AddCategory from "./pages/adminPages/AddCategory";
+import AddBulkCategory from "./pages/adminPages/AddBulkCategory";
 
 const App = () => {
   const { user, loading } = useAuth();
@@ -52,7 +56,17 @@ const App = () => {
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/products" element={<AllProducts />} />
             <Route path="/admin/products/edit/:id" element={<EditProduct />} />
+            <Route
+              path="/admin/categories/edit/:slug"
+              element={<EditCategory />}
+            />
             <Route path="/admin/products/new" element={<AddProduct />} />
+            <Route path="/admin/categories" element={<AllCategory />} />
+            <Route path="/admin/categories/new" element={<AddCategory />} />
+            <Route
+              path="/admin/categories/new/bulk"
+              element={<AddBulkCategory />}
+            />
             <Route
               path="/admin/products/new/bulk"
               element={<AddBulkProduct />}

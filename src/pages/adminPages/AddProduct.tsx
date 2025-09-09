@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { ADD_PRODUCT } from "../../graphql/mutations/product"; // adjust path if needed
+import { useAppToast } from "../../utils/useAppToast";
 
 interface Dimensions {
   width: number;
@@ -71,10 +72,12 @@ const initialFormData: ProductInput = {
 const AddProduct = () => {
   const [formData, setFormData] = useState<ProductInput>(initialFormData);
 
+  const { toastSuccess, toastError } = useAppToast();
+
   const [addProduct, { loading, error }] = useMutation(ADD_PRODUCT, {
     onCompleted: (data) => {
-      console.log("✅ Product Added:", data.addProduct);
-      alert(`Product "${data.addProduct.title}" added successfully!`);
+      console.log("Product Added:", data.addProduct);
+      toastSuccess(`Product "${data.addProduct.title}" added successfully!`);
       setFormData(initialFormData);
     },
   });
@@ -123,10 +126,14 @@ const AddProduct = () => {
     addProduct({ variables: { productInput: formData } });
   };
 
+  if (error) {
+    toastError(error.message);
+  }
+
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white dark:bg-[#09090b] shadow rounded-2xl">
       <h2 className="text-2xl font-bold mb-4">Add Product</h2>
-      {error && <p className="text-red-600">❌ Error: {error.message}</p>}
+      {error && <p className="text-red-600"> Error: {error.message}</p>}
       <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
         {/* Title, Brand */}
         <input
@@ -309,7 +316,7 @@ const AddProduct = () => {
         <button
           type="submit"
           disabled={loading}
-          className="col-span-2 bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          className="col-span-2 border border-blue-600 dark:text-white text-black hover:text-white cursor-pointer py-2 rounded hover:bg-blue-700"
         >
           {loading ? "Submitting..." : "Submit"}
         </button>
