@@ -50,3 +50,41 @@ mutation DeleteAccount($email: String!, $password: String!){
 }
 `;
 
+export const ACTIVATE_USER = gql`
+mutation ActivateUser($userId: ID!){
+  activateUser(userId: $userId) {
+    userId
+    name
+    username
+    email
+    isActive
+    role
+  }
+}
+`;
+
+export const DEACTIVATE_USER = gql`
+mutation($userId: ID!){
+  deactivateUser(userId: $userId) {
+    userId
+    name
+    username
+    email
+    isActive
+    role
+  }
+}
+`;
+
+export const BAN_USER = gql`
+mutation($userId: ID!){
+  banUser(userId: $userId) {
+    userId
+    name
+    username
+    email
+    isBanned
+    role
+  }
+}
+`;

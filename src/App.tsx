@@ -37,6 +37,7 @@ import AllCategory from "./pages/adminPages/AllCategory";
 import EditCategory from "./pages/adminPages/EditCategory";
 import AddCategory from "./pages/adminPages/AddCategory";
 import AddBulkCategory from "./pages/adminPages/AddBulkCategory";
+import Users from "./pages/adminPages/Users";
 
 const App = () => {
   const { user, loading } = useAuth();
@@ -71,6 +72,7 @@ const App = () => {
               path="/admin/products/new/bulk"
               element={<AddBulkProduct />}
             />
+            <Route path="/admin/users" element={<Users />} />
           </Routes>
         </AdminLayout>
         <Toaster />
