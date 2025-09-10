@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useMutation, useQuery } from "@apollo/client";
+import { useApolloClient, useMutation, useQuery } from "@apollo/client";
 import { PLACE_ORDER_FROM_CART } from "../../graphql/mutations/order";
 import { GET_USER_CART } from "../../graphql/queries/cart.query";
 import { GET_PRODUCTS_BY_IDS } from "../../graphql/queries/products.query";
@@ -13,10 +13,13 @@ import type {
 import type { PaymentMethod } from "../order/PlaceOrderForm";
 import { useAppToast } from "../../utils/useAppToast";
 import { ShoppingCart } from "lucide-react";
+import { checkUserStatus } from "../../utils/checkUserStatus";
 
 const CartCheckoutPage = () => {
   const user = useSelector((state: RootState) => state.user.user);
   const navigate = useNavigate();
+
+  const client = useApolloClient();
 
   const { toastSuccess, toastError } = useAppToast();
 
@@ -71,6 +74,10 @@ const CartCheckoutPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const valid = await checkUserStatus(client);
+
+    if (!valid) return;
 
     if (!user?.email) return;
 

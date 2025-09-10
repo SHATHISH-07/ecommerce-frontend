@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAppToast } from "../../utils/useAppToast";
+import { checkUserStatus } from "../../utils/checkUserStatus";
+import { useApolloClient } from "@apollo/client";
 
 interface ProductSummary {
   externalProductId: number;
@@ -25,9 +27,15 @@ const ReturnOrderModal: React.FC<ReturnOrderModalProps> = ({
   const [reason, setReason] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const client = useApolloClient();
+
   const { toastError } = useAppToast();
 
   const handleSubmit = async () => {
+    const valid = await checkUserStatus(client);
+
+    if (!valid) return;
+
     if (!reason.trim()) {
       toastError("Please provide a reason for return.");
       return;

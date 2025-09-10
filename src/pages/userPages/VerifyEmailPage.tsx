@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useMutation } from "@apollo/client";
+import { useApolloClient, useMutation } from "@apollo/client";
 import {
   VERIFY_EMAIL_OTP,
   RESEND_EMAIL_OTP,
@@ -7,6 +7,7 @@ import {
 } from "../../graphql/mutations/auth";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAppToast } from "../../utils/useAppToast";
+import { checkUserStatus } from "../../utils/checkUserStatus";
 
 const VerifyEmail = () => {
   const [otp, setOtp] = useState("");
@@ -20,6 +21,8 @@ const VerifyEmail = () => {
   const { toastSuccess, toastError } = useAppToast();
 
   const isSignupFlow = !!localStorage.getItem("signupEmail");
+
+  const client = useApolloClient();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -67,6 +70,10 @@ const VerifyEmail = () => {
 
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const valid = checkUserStatus(client);
+
+    if (!valid) return;
 
     try {
       let data;
@@ -121,6 +128,10 @@ const VerifyEmail = () => {
     }
 
     try {
+      const valid = checkUserStatus(client);
+
+      if (!valid) return;
+
       await resendOtp({ variables: { email } });
       setResendCount((prev) => prev + 1);
       setCooldown(60);

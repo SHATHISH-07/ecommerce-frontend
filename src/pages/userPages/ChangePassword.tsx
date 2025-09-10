@@ -1,15 +1,18 @@
 import { useState } from "react";
-import { useMutation } from "@apollo/client";
+import { useApolloClient, useMutation } from "@apollo/client";
 import { RESET_PASSWORD } from "../../graphql/mutations/auth";
 import { useNavigate } from "react-router-dom";
 import { useAppToast } from "../../utils/useAppToast";
 import { Eye, EyeOff } from "lucide-react";
+import { checkUserStatus } from "../../utils/checkUserStatus";
 
 const ChangePassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [reenterPassword, setReenterPassword] = useState("");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showReenterPassword, setShowReenterPassword] = useState(false);
+
+  const client = useApolloClient();
 
   const navigate = useNavigate();
   const storedEmail = localStorage.getItem("resetPasswordEmail");
@@ -30,6 +33,11 @@ const ChangePassword = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    const valid = checkUserStatus(client);
+
+    if (!valid) return;
+
     if (!newPassword || !reenterPassword)
       return toastError("All fields are required");
     if (newPassword !== reenterPassword)

@@ -11,6 +11,7 @@ import { useAppToast } from "../../utils/useAppToast";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../app/store";
 import { refetchAndStoreUser } from "../../utils/refetchUser";
+import { checkUserStatus } from "../../utils/checkUserStatus";
 
 interface EditProfileFormProps {
   user: UserType;
@@ -121,6 +122,10 @@ const EditProfileForm = ({ user }: EditProfileFormProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    const valid = checkUserStatus(client);
+
+    if (!valid) return;
+
     const updatedFields: Partial<typeof formData> = {};
     Object.keys(formData).forEach((key) => {
       const typedKey = key as keyof typeof formData;
@@ -141,6 +146,10 @@ const EditProfileForm = ({ user }: EditProfileFormProps) => {
     e.preventDefault();
     e.stopPropagation();
 
+    const valid = checkUserStatus(client);
+
+    if (!valid) return;
+
     if (newEmail === user.email) {
       toastError("No changes detected in email");
       return;
@@ -150,6 +159,10 @@ const EditProfileForm = ({ user }: EditProfileFormProps) => {
   };
 
   const handleVerifyEmail = () => {
+    const valid = checkUserStatus(client);
+
+    if (!valid) return;
+
     if (!newEmail) {
       toastError("Email not set for verification");
       return;
@@ -161,6 +174,10 @@ const EditProfileForm = ({ user }: EditProfileFormProps) => {
 
   const handlePasswordUpdate = (e: React.FormEvent) => {
     e.preventDefault();
+
+    const valid = checkUserStatus(client);
+
+    if (!valid) return;
 
     if (!currentPassword || !newPassword) {
       toastError("Please fill both current and new password fields");

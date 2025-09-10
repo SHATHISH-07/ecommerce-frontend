@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { GET_USER_ORDER_BY_ID } from "../../graphql/queries/userOrder.query";
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery, useMutation, useApolloClient } from "@apollo/client";
 import {
   AlertTriangle,
   CheckCircle2,
@@ -14,6 +14,7 @@ import { useAppToast } from "../../utils/useAppToast";
 import { useState } from "react";
 import CancelOrderModal from "../../components/order/CancelOrderModal";
 import ReturnOrderModal from "../../components/order/ReturnOrderModal";
+import { checkUserStatus } from "../../utils/checkUserStatus";
 
 interface Product {
   externalProductId: number;
@@ -49,6 +50,8 @@ const TrackOrder = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toastSuccess, toastError } = useAppToast();
+
+  const client = useApolloClient();
 
   const { data, loading, error, refetch } = useQuery(GET_USER_ORDER_BY_ID, {
     variables: { orderId: id },
@@ -86,6 +89,10 @@ const TrackOrder = () => {
 
   const handleConfirmCancel = async (reason: string) => {
     try {
+      const valid = checkUserStatus(client);
+
+      if (!valid) return;
+
       const res = await cancelOrder({
         variables: { orderId: order.id, reason },
       });
@@ -104,6 +111,10 @@ const TrackOrder = () => {
 
   const handleReturnOrder = async (reason: string) => {
     try {
+      const valid = checkUserStatus(client);
+
+      if (!valid) return;
+
       const res = await returnOrder({
         variables: { orderId: order.id, reason },
       });

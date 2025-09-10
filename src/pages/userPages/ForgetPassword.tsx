@@ -1,13 +1,16 @@
 import { useState } from "react";
-import { useMutation } from "@apollo/client";
+import { useApolloClient, useMutation } from "@apollo/client";
 import { INITIATE_RESET_PASSWORD } from "../../graphql/mutations/auth";
 import { useNavigate } from "react-router-dom";
 import { useAppToast } from "../../utils/useAppToast";
+import { checkUserStatus } from "../../utils/checkUserStatus";
 
 const ForgetPassword = () => {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
   const { toastSuccess, toastError } = useAppToast();
+
+  const client = useApolloClient();
 
   const [initiateResetPassword, { loading }] = useMutation(
     INITIATE_RESET_PASSWORD,
@@ -26,6 +29,11 @@ const ForgetPassword = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    const valid = checkUserStatus(client);
+
+    if (!valid) return;
+
     if (!email) return toastError("Email is required");
 
     localStorage.setItem("resetPasswordEmail", email);

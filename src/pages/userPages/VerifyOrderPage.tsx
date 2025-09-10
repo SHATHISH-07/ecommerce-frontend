@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { useMutation } from "@apollo/client";
+import { useApolloClient, useMutation } from "@apollo/client";
 import {
   VERIFY_ORDER_OTP,
   RESEND_ORDER_OTP,
 } from "../../graphql/mutations/auth";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAppToast } from "../../utils/useAppToast";
+import { checkUserStatus } from "../../utils/checkUserStatus";
 
 const VerifyOrderPage = () => {
   const [otp, setOtp] = useState("");
@@ -15,6 +16,8 @@ const VerifyOrderPage = () => {
     type: "success" | "error";
     text: string;
   } | null>(null);
+
+  const client = useApolloClient();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -73,6 +76,11 @@ const VerifyOrderPage = () => {
 
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const valid = checkUserStatus(client);
+
+    if (!valid) return;
+
     if (!email) return;
 
     try {
@@ -117,6 +125,10 @@ const VerifyOrderPage = () => {
     if (!email) return;
 
     try {
+      const valid = checkUserStatus(client);
+
+      if (!valid) return;
+
       const { data } = await resendOrderOtp({ variables: { email } });
 
       if (data?.resendEmailOTP?.success) {

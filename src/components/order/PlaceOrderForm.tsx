@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { useMutation } from "@apollo/client";
+import { useApolloClient, useMutation } from "@apollo/client";
 import { PLACE_ORDER } from "../../graphql/mutations/order";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../app/store";
 import { useAppToast } from "../../utils/useAppToast";
+import { checkUserStatus } from "../../utils/checkUserStatus";
 
 export type PaymentMethod = "Cash_on_Delivery" | "Card" | "UPI" | "NetBanking";
 
@@ -31,6 +32,8 @@ interface UserAddress {
 const PlaceOrderPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const client = useApolloClient();
 
   const products: Product[] = location.state?.products || [];
   const user = useSelector((state: RootState) => state.user.user);
@@ -71,6 +74,11 @@ const PlaceOrderPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const valid = checkUserStatus(client);
+
+    if (!valid) return;
+
     if (!user?.email) return;
 
     if (!user.emailVerified) {

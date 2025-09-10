@@ -1,11 +1,12 @@
 import { ShoppingCart, Trash2 } from "lucide-react";
 import type { Product } from "../../types/products";
-import { useMutation } from "@apollo/client";
+import { useApolloClient, useMutation } from "@apollo/client";
 import { REMOVE_CART_ITEM } from "../../graphql/mutations/cart";
 import QuantitySelector from "./QuantitySelector";
 import { UPDATED_USER_CART_QUANTITY } from "../../graphql/queries/cart.query";
 import { useNavigate } from "react-router-dom";
 import { useAppToast } from "../../utils/useAppToast";
+import { checkUserStatus } from "../../utils/checkUserStatus";
 
 const MobileCartCard = ({
   product,
@@ -16,6 +17,8 @@ const MobileCartCard = ({
   productId: number;
   quantity: number;
 }) => {
+  const client = useApolloClient();
+
   const [removeCartItem] = useMutation(REMOVE_CART_ITEM, {
     refetchQueries: ["GetUserCart"],
   });
@@ -44,7 +47,11 @@ const MobileCartCard = ({
     toastSuccess("Product removed from cart");
   };
 
-  const handleBuyNow = () => {
+  const handleBuyNow = async () => {
+    const valid = await checkUserStatus(client);
+
+    if (!valid) return;
+
     navigate("/placeorder", {
       state: {
         products: [

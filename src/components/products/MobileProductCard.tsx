@@ -1,16 +1,19 @@
 import { Star } from "lucide-react";
 import type { Product } from "../../types/products";
-import { useMutation } from "@apollo/client";
+import { useApolloClient, useMutation } from "@apollo/client";
 import { ADD_TO_CART } from "../../graphql/mutations/cart";
 import { GET_USER_CART_COUNT } from "../../graphql/queries/cart.query";
 import { useNavigate } from "react-router-dom";
 import { useAppToast } from "../../utils/useAppToast";
+import { checkUserStatus } from "../../utils/checkUserStatus";
 
 const MobileProductCard = ({ product }: { product: Product }) => {
   const [addToCart, { loading }] = useMutation(ADD_TO_CART, {
     refetchQueries: [{ query: GET_USER_CART_COUNT }],
     awaitRefetchQueries: true,
   });
+
+  const client = useApolloClient();
 
   const originalPrice = product.price / (1 - product.discountPercentage / 100);
 
@@ -19,6 +22,10 @@ const MobileProductCard = ({ product }: { product: Product }) => {
 
   const handleAddToCart = async () => {
     try {
+      const valid = await checkUserStatus(client);
+
+      if (!valid) return;
+
       const { data } = await addToCart({
         variables: {
           input: {

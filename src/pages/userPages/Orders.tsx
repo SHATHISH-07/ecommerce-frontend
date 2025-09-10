@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation, useQuery } from "@apollo/client";
+import { useApolloClient, useMutation, useQuery } from "@apollo/client";
 import { GET_USER_ORDERS } from "../../graphql/queries/userOrder.query";
 import LoadingSpinner from "../../components/products/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,7 @@ import CancelOrderModal from "../../components/order/CancelOrderModal";
 import { CANCEL_ORDER, RETURN_ORDER } from "../../graphql/mutations/order";
 import { useAppToast } from "../../utils/useAppToast";
 import ReturnOrderModal from "../../components/order/ReturnOrderModal";
+import { checkUserStatus } from "../../utils/checkUserStatus";
 
 interface Product {
   externalProductId: number;
@@ -36,6 +37,8 @@ const Orders = () => {
   const { data, loading, error, refetch } = useQuery(GET_USER_ORDERS, {
     fetchPolicy: "network-only",
   });
+
+  const client = useApolloClient();
 
   const [cancelOrder] = useMutation<CancelOrderResponse>(CANCEL_ORDER);
   const [returnOrder] = useMutation(RETURN_ORDER);
@@ -86,6 +89,10 @@ const Orders = () => {
   const handleConfirmCancel = async (reason: string) => {
     if (!selectedOrder) return;
     try {
+      const valid = checkUserStatus(client);
+
+      if (!valid) return;
+
       const res = await cancelOrder({
         variables: {
           orderId: selectedOrder.id,
@@ -116,6 +123,10 @@ const Orders = () => {
   const handleReturnOrder = async (reason: string) => {
     if (!selectedReturnOrder) return;
     try {
+      const valid = checkUserStatus(client);
+
+      if (!valid) return;
+
       const res = await returnOrder({
         variables: {
           orderId: selectedReturnOrder.id,

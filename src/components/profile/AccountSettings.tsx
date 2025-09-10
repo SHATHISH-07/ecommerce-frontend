@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
-import { useMutation } from "@apollo/client";
+import { useApolloClient, useMutation } from "@apollo/client";
 import { DELETE_ACCOUNT } from "../../graphql/mutations/user";
 import { useAppToast } from "../../utils/useAppToast";
 import { useAppSelector, type RootState } from "../../app/store";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { clearUser } from "../../app/slices/userSlice";
+import { checkUserStatus } from "../../utils/checkUserStatus";
 
 const AccountSettings = () => {
   const user = useAppSelector((state: RootState) => state.user.user);
+
+  const client = useApolloClient();
 
   const { toastSuccess, toastError } = useAppToast();
 
@@ -53,6 +56,10 @@ const AccountSettings = () => {
   }
 
   const handleDelete = () => {
+    const valid = checkUserStatus(client);
+
+    if (!valid) return;
+
     if (emailInput !== user.email) {
       toastError("Email does not match");
       return;

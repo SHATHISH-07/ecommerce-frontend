@@ -4,11 +4,12 @@ import StarRating from "./StarRating";
 import AvailabilityStatus from "./AvailabilityStatus";
 import PolicyInfo from "./PolicyInfo";
 import { useState } from "react";
-import { useMutation } from "@apollo/client";
+import { useApolloClient, useMutation } from "@apollo/client";
 import { ADD_TO_CART } from "../../graphql/mutations/cart";
 import { GET_USER_CART_COUNT } from "../../graphql/queries/cart.query";
 import { useAppToast } from "../../utils/useAppToast";
 import { useNavigate } from "react-router-dom";
+import { checkUserStatus } from "../../utils/checkUserStatus";
 
 const DesktopProductCard = ({ product }: { product: Product }) => {
   const [quantity, setQuantity] = useState(1);
@@ -16,6 +17,8 @@ const DesktopProductCard = ({ product }: { product: Product }) => {
     refetchQueries: [{ query: GET_USER_CART_COUNT }],
     awaitRefetchQueries: true,
   });
+
+  const client = useApolloClient();
 
   const navigate = useNavigate();
 
@@ -25,6 +28,10 @@ const DesktopProductCard = ({ product }: { product: Product }) => {
 
   const handleAddToCart = async () => {
     try {
+      const valid = await checkUserStatus(client);
+
+      if (!valid) return;
+
       const { data } = await addToCart({
         variables: {
           input: {

@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useApolloClient, useQuery } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector, type RootState } from "../../app/store";
 
@@ -6,10 +6,13 @@ import { GET_USER_CART } from "../../graphql/queries/cart.query";
 import LoadingSpinner from "../../components/products/LoadingSpinner";
 import { AlertTriangle, ShoppingCart } from "lucide-react";
 import CartProduct from "../../components/cart/CartProduct";
+import { checkUserStatus } from "../../utils/checkUserStatus";
 
 const Cart = () => {
   const navigate = useNavigate();
   const user = useAppSelector((state: RootState) => state.user.user);
+
+  const client = useApolloClient();
 
   const { data, loading, error } = useQuery(GET_USER_CART, {
     fetchPolicy: "cache-and-network",
@@ -17,6 +20,10 @@ const Cart = () => {
   });
 
   const handleCheckout = async () => {
+    const valid = await checkUserStatus(client);
+
+    if (!valid) return;
+
     await navigate("/cart-checkout", { replace: true });
   };
 

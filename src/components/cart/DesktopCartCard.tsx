@@ -3,12 +3,13 @@ import { type Product } from "../../types/products";
 import StarRating from "../products/StarRating";
 import AvailabilityStatus from "../products/AvailabilityStatus";
 import PolicyInfo from "../products/PolicyInfo";
-import { useMutation } from "@apollo/client";
+import { useApolloClient, useMutation } from "@apollo/client";
 import { REMOVE_CART_ITEM } from "../../graphql/mutations/cart";
 import QuantitySelector from "./QuantitySelector";
 import { UPDATED_USER_CART_QUANTITY } from "../../graphql/queries/cart.query";
 import { useNavigate } from "react-router-dom";
 import { useAppToast } from "../../utils/useAppToast";
+import { checkUserStatus } from "../../utils/checkUserStatus";
 
 const DesktopCartCard = ({
   product,
@@ -19,6 +20,8 @@ const DesktopCartCard = ({
   productId: number;
   quantity: number;
 }) => {
+  const client = useApolloClient();
+
   const [removeCartItem] = useMutation(REMOVE_CART_ITEM, {
     refetchQueries: ["GetUserCart"],
   });
@@ -49,7 +52,11 @@ const DesktopCartCard = ({
 
   const originalPrice = product.price / (1 - product.discountPercentage / 100);
 
-  const handleBuyNow = () => {
+  const handleBuyNow = async () => {
+    const valid = await checkUserStatus(client);
+
+    if (!valid) return;
+
     navigate("/placeorder", {
       state: {
         products: [

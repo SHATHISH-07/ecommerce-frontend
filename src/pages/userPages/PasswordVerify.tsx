@@ -1,13 +1,16 @@
 import { useState } from "react";
-import { useMutation } from "@apollo/client";
+import { useApolloClient, useMutation } from "@apollo/client";
 import { VERIFY_OTP } from "../../graphql/mutations/auth";
 import { useNavigate } from "react-router-dom";
 import { useAppToast } from "../../utils/useAppToast";
+import { checkUserStatus } from "../../utils/checkUserStatus";
 
 const PasswordVerify = () => {
   const [otp, setOtp] = useState("");
 
   const navigate = useNavigate();
+
+  const client = useApolloClient();
 
   const storedEmail = localStorage.getItem("resetPasswordEmail");
 
@@ -27,6 +30,11 @@ const PasswordVerify = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    const valid = checkUserStatus(client);
+
+    if (!valid) return;
+
     if (!otp) return toastError("OTP is required");
     if (!storedEmail)
       return toastError("Email not found. Please retry the reset process.");

@@ -12,12 +12,13 @@ import {
 import PolicyDetailInfo from "./PolicyDetailInfo";
 import AvailabilityStatus from "./AvailabilityStatus";
 import StarRating from "./StarRating";
-import { useMutation } from "@apollo/client";
+import { useApolloClient, useMutation } from "@apollo/client";
 import { ADD_TO_CART } from "../../graphql/mutations/cart";
 import { GET_USER_CART_COUNT } from "../../graphql/queries/cart.query";
 import { useAppToast } from "../../utils/useAppToast";
 import FullscreenImageModal from "./FullScreenImageModal";
 import { useNavigate } from "react-router-dom";
+import { checkUserStatus } from "../../utils/checkUserStatus";
 
 interface ProductDetailCardProps {
   product: DetailedProduct;
@@ -27,6 +28,8 @@ const ProductDetailCard = ({ product }: ProductDetailCardProps) => {
   const [mainImage, setMainImage] = useState<string>(product.thumbnail);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [quantity, setQuantity] = useState<number>(1);
+
+  const client = useApolloClient();
 
   const { toastCartSuccess, toastError } = useAppToast();
 
@@ -40,6 +43,10 @@ const ProductDetailCard = ({ product }: ProductDetailCardProps) => {
 
   const handleAddToCart = async () => {
     try {
+      const valid = await checkUserStatus(client);
+
+      if (!valid) return;
+
       const { data } = await addToCart({
         variables: {
           input: {
