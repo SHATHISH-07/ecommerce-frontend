@@ -38,6 +38,9 @@ import EditCategory from "./pages/adminPages/EditCategory";
 import AddCategory from "./pages/adminPages/AddCategory";
 import AddBulkCategory from "./pages/adminPages/AddBulkCategory";
 import Users from "./pages/adminPages/Users";
+import BannerAdmin from "./pages/adminPages/BannerAdmin";
+import AddBanner from "./pages/adminPages/AddBanner";
+import EditBanner from "./pages/adminPages/EditBanner";
 
 const App = () => {
   const { user, loading } = useAuth();
@@ -73,6 +76,9 @@ const App = () => {
               element={<AddBulkProduct />}
             />
             <Route path="/admin/users" element={<Users />} />
+            <Route path="/admin/banner" element={<BannerAdmin />} />
+            <Route path="/admin/banner/new" element={<AddBanner />} />
+            <Route path="/admin/banner/edit/:id" element={<EditBanner />} />
           </Routes>
         </AdminLayout>
         <Toaster />

@@ -40,7 +40,17 @@ const sidebarItems = [
   },
   { label: "Users", icon: Users, to: "/admin/users" },
   { label: "Orders", icon: ShoppingBag, to: "/admin/orders" },
-  { label: "Banner", icon: TicketCheck, to: "/admin/banner" },
+  {
+    label: "Banner",
+    icon: TicketCheck,
+    children: [
+      { label: "All Banners", to: "/admin/banner" },
+      {
+        label: "Add Banner",
+        to: "/admin/banner/new",
+      },
+    ],
+  },
 ];
 
 const AdminNav = () => {
