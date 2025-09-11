@@ -68,8 +68,8 @@ export const GET_ALL_ORDERS = gql`
 `;
 
 export const GET_USER_ORDER_BY_STATUS = gql`
-    query($status: OrderStatus!){
-        getUserOrderByStatus(status: $status) {
+    query($status: String!){
+        getAllOrderByStatusAdmin(status: $status) {
             id
             userId
             products {

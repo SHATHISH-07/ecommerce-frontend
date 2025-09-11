@@ -53,9 +53,10 @@ const OrderAdmin = () => {
     variables: { limit, skip },
   });
 
-  const [getByStatus] = useLazyQuery(GET_USER_ORDER_BY_STATUS, {
-    fetchPolicy: "network-only",
-  });
+  const [
+    getByStatus,
+    { data: statusData, loading: statusLoading, refetch: refetchByStatus },
+  ] = useLazyQuery(GET_USER_ORDER_BY_STATUS, { fetchPolicy: "network-only" });
 
   const [getById, { data: idData, loading: idLoading, refetch: refetchById }] =
     useLazyQuery(GET_USER_ORDER_BY_ID, { fetchPolicy: "network-only" });
@@ -67,7 +68,7 @@ const OrderAdmin = () => {
   // Derived orders
   const orders: UserOrder[] =
     mode === "status"
-      ? data?.getUserOrderByStatus ?? []
+      ? statusData?.getAllOrderByStatusAdmin ?? []
       : mode === "id"
       ? idData?.getOrderById
         ? [idData.getOrderById]
@@ -76,7 +77,7 @@ const OrderAdmin = () => {
 
   const total =
     mode === "status"
-      ? data?.getUserOrderByStatus?.length ?? 0
+      ? statusData?.getAllOrderByStatusAdmin?.length ?? 0
       : mode === "id"
       ? idData?.getOrderById
         ? 1
@@ -92,7 +93,11 @@ const OrderAdmin = () => {
     try {
       await updateStatus({ variables: { orderId, newStatus } });
       toastSuccess("Order status updated!");
-      refetch();
+      if (mode === "status") {
+        refetchByStatus?.({ status: selectedStatus });
+      } else {
+        refetch();
+      }
     } catch (err) {
       console.error(err);
       toastError("Failed to update status");
@@ -106,7 +111,11 @@ const OrderAdmin = () => {
     try {
       const { data } = await initiateRefund({ variables: { orderId } });
       toastSuccess(data.initiateOrConfirmRefundOrder.message);
-      refetch();
+      if (mode === "status") {
+        refetchByStatus?.({ status: selectedStatus });
+      } else {
+        refetch();
+      }
     } catch (err) {
       console.error(err);
       toastError("Failed to process refund");
@@ -155,7 +164,10 @@ const OrderAdmin = () => {
     (_, i) => startPage + i
   );
 
-  const isLoading = (mode === "all" && loading) || (mode === "id" && idLoading);
+  const isLoading =
+    (mode === "all" && loading) ||
+    (mode === "id" && idLoading) ||
+    (mode === "status" && statusLoading);
 
   if (isLoading && !orders.length) {
     return (
