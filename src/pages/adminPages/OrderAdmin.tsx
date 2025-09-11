@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useLazyQuery } from "@apollo/client";
 import {
-  CONFIRM_REFUND,
   INITIATE_REFUND,
   UPDATE_USER_ORDER_STATUS,
 } from "../../graphql/mutations/order";
@@ -15,6 +14,23 @@ import { useAppToast } from "../../utils/useAppToast";
 
 type Mode = "all" | "status" | "id";
 
+interface OrderProduct {
+  externalProductId: number;
+  title: string;
+  thumbnail: string;
+  quantity: number;
+}
+
+interface UserOrder {
+  id: string;
+  userId: string;
+  products: OrderProduct[];
+  totalAmount: number;
+  paymentMethod: string;
+  paymentStatus: string;
+  orderStatus: string;
+}
+
 const OrderAdmin = () => {
   const [page, setPage] = useState(1);
   const [pageBlock, setPageBlock] = useState(0);
@@ -22,36 +38,36 @@ const OrderAdmin = () => {
   const [selectedStatus, setSelectedStatus] = useState("ALL");
   const [mode, setMode] = useState<Mode>("all");
 
+  const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
+  const [processingRefund, setProcessingRefund] = useState<string | null>(null);
+
   const limit = 10;
   const pagesPerBlock = 10;
   const skip = (page - 1) * limit;
 
   const { toastSuccess, toastError } = useAppToast();
 
-  // Base query (all orders)
+  // Queries
   const { data, loading, error, refetch } = useQuery(GET_ALL_ORDERS, {
     fetchPolicy: "network-only",
     variables: { limit, skip },
   });
 
-  // Lazy query for status filter
-  const [
-    getByStatus,
-    { data: statusData, loading: statusLoading, refetch: refetchStatus },
-  ] = useLazyQuery(GET_USER_ORDER_BY_STATUS, { fetchPolicy: "network-only" });
+  const [getByStatus] = useLazyQuery(GET_USER_ORDER_BY_STATUS, {
+    fetchPolicy: "network-only",
+  });
 
-  // Lazy query for order by ID
   const [getById, { data: idData, loading: idLoading, refetch: refetchById }] =
     useLazyQuery(GET_USER_ORDER_BY_ID, { fetchPolicy: "network-only" });
 
+  // Mutations
   const [updateStatus] = useMutation(UPDATE_USER_ORDER_STATUS);
   const [initiateRefund] = useMutation(INITIATE_REFUND);
-  const [confirmRefund] = useMutation(CONFIRM_REFUND);
 
-  // 🔹 derive orders
-  const orders =
+  // Derived orders
+  const orders: UserOrder[] =
     mode === "status"
-      ? statusData?.getUserOrderByStatus ?? []
+      ? data?.getUserOrderByStatus ?? []
       : mode === "id"
       ? idData?.getOrderById
         ? [idData.getOrderById]
@@ -60,7 +76,7 @@ const OrderAdmin = () => {
 
   const total =
     mode === "status"
-      ? statusData?.getUserOrderByStatus?.length ?? 0
+      ? data?.getUserOrderByStatus?.length ?? 0
       : mode === "id"
       ? idData?.getOrderById
         ? 1
@@ -69,8 +85,10 @@ const OrderAdmin = () => {
 
   const totalPages = Math.max(1, Math.ceil(total / limit));
 
-  // 🔹 Actions
+  // Actions
   const handleUpdateStatus = async (orderId: string, newStatus: string) => {
+    if (!newStatus) return;
+    setUpdatingStatus(orderId);
     try {
       await updateStatus({ variables: { orderId, newStatus } });
       toastSuccess("Order status updated!");
@@ -78,32 +96,26 @@ const OrderAdmin = () => {
     } catch (err) {
       console.error(err);
       toastError("Failed to update status");
+    } finally {
+      setUpdatingStatus(null);
     }
   };
 
-  const handleInitiateRefund = async (orderId: string) => {
+  const handleInitiateOrConfirmRefund = async (orderId: string) => {
+    setProcessingRefund(orderId);
     try {
-      await initiateRefund({ variables: { orderId } });
-      toastSuccess("Refund initiated!");
+      const { data } = await initiateRefund({ variables: { orderId } });
+      toastSuccess(data.initiateOrConfirmRefundOrder.message);
       refetch();
-    } catch (err: unknown) {
-      toastError("Failed to initiate refund");
-      console.log(err);
+    } catch (err) {
+      console.error(err);
+      toastError("Failed to process refund");
+    } finally {
+      setProcessingRefund(null);
     }
   };
 
-  const handleConfirmRefund = async (orderId: string) => {
-    try {
-      await confirmRefund({ variables: { orderId } });
-      toastSuccess("Refund confirmed!");
-      refetch();
-    } catch (err: unknown) {
-      toastError("Failed to confirm refund");
-      console.log(err);
-    }
-  };
-
-  // 🔹 Search & Filters
+  // Search & filters
   const handleSearchById = async () => {
     if (!searchId.trim()) return;
     setMode("id");
@@ -135,7 +147,7 @@ const OrderAdmin = () => {
     await refetch();
   };
 
-  // 🔹 Pagination
+  // Pagination
   const startPage = pageBlock * pagesPerBlock + 1;
   const endPage = Math.min(startPage + pagesPerBlock - 1, totalPages);
   const pageNumbers = Array.from(
@@ -143,10 +155,7 @@ const OrderAdmin = () => {
     (_, i) => startPage + i
   );
 
-  const isLoading =
-    (mode === "all" && loading) ||
-    (mode === "status" && statusLoading) ||
-    (mode === "id" && idLoading);
+  const isLoading = (mode === "all" && loading) || (mode === "id" && idLoading);
 
   if (isLoading && !orders.length) {
     return (
@@ -168,9 +177,8 @@ const OrderAdmin = () => {
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-6">Order Management</h2>
 
-      {/* Filters (always visible) */}
+      {/* Filters */}
       <div className="flex flex-col md:flex-row gap-6 mb-6">
-        {/* Search by ID */}
         <div className="flex gap-2">
           <input
             type="text"
@@ -188,7 +196,6 @@ const OrderAdmin = () => {
           </button>
         </div>
 
-        {/* Filter by Status */}
         <div>
           <select
             value={selectedStatus}
@@ -207,7 +214,6 @@ const OrderAdmin = () => {
           </select>
         </div>
 
-        {/* Reset */}
         <button
           onClick={handleReset}
           className="border border-gray-500 hover:bg-gray-500 hover:text-white px-4 py-2 rounded"
@@ -231,12 +237,12 @@ const OrderAdmin = () => {
             </tr>
           </thead>
           <tbody>
-            {orders.map((order: any) => (
+            {orders.map((order: UserOrder) => (
               <tr key={order.id} className="border-t hover:bg-gray-50">
                 <td className="p-3 font-medium">{order.id}</td>
                 <td className="p-3">{order.userId}</td>
                 <td className="p-3">
-                  {order.products.map((p: any) => (
+                  {order.products.map((p) => (
                     <div
                       key={p.externalProductId}
                       className="flex items-center gap-2 mb-1"
@@ -263,6 +269,7 @@ const OrderAdmin = () => {
                     onChange={(e) =>
                       handleUpdateStatus(order.id, e.target.value)
                     }
+                    disabled={updatingStatus === order.id}
                   >
                     <option value="">Update Status</option>
                     <option value="Processing">Processing</option>
@@ -274,22 +281,21 @@ const OrderAdmin = () => {
                     <option value="Returned">Returned</option>
                     <option value="Refunded">Refunded</option>
                   </select>
+                  {updatingStatus === order.id && (
+                    <span className="text-sm text-gray-500">Updating...</span>
+                  )}
+
                   {(order.orderStatus === "Cancelled" ||
                     order.orderStatus === "Returned") && (
-                    <>
-                      <button
-                        onClick={() => handleInitiateRefund(order.id)}
-                        className="px-3 py-1 border rounded hover:bg-gray-100"
-                      >
-                        Initiate Refund
-                      </button>
-                      <button
-                        onClick={() => handleConfirmRefund(order.id)}
-                        className="px-3 py-1 border rounded bg-red-500 text-white hover:bg-red-600"
-                      >
-                        Confirm Refund
-                      </button>
-                    </>
+                    <button
+                      onClick={() => handleInitiateOrConfirmRefund(order.id)}
+                      className="px-3 py-1 border rounded bg-red-500 text-white hover:bg-red-600"
+                      disabled={processingRefund === order.id}
+                    >
+                      {processingRefund === order.id
+                        ? "Processing..."
+                        : "Initiate Refund"}
+                    </button>
                   )}
                 </td>
               </tr>

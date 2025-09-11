@@ -52,19 +52,10 @@ export const UPDATE_USER_ORDER_STATUS = gql`
 `;
 
 export const INITIATE_REFUND = gql`
-  mutation InitiateRefund($orderId: String!) {
-    initiateRefundOrder(orderId: $orderId) {
-      message
-      success
-    }
+mutation InitiateOrConfirmRefundOrder($orderId: String!){
+  initiateOrConfirmRefundOrder(orderId: $orderId) {
+    message
+    success
   }
-`;
-
-export const CONFIRM_REFUND = gql`
-  mutation ConfirmRefundOrder($orderId: String!) {
-    confirmRefundOrder(orderId: $orderId) {
-      message
-      success
-    }
-  }
+}
 `;
