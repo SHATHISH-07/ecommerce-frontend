@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { useAuth } from "./hooks/useAuth";
 import NavBar from "./components/navbar/NavBar";
 import Home from "./pages/userPages/Home";
@@ -41,6 +41,7 @@ import Users from "./pages/adminPages/Users";
 import BannerAdmin from "./pages/adminPages/BannerAdmin";
 import AddBanner from "./pages/adminPages/AddBanner";
 import EditBanner from "./pages/adminPages/EditBanner";
+import OrderAdmin from "./pages/adminPages/OrderAdmin";
 
 const App = () => {
   const { user, loading } = useAuth();
@@ -79,6 +80,9 @@ const App = () => {
             <Route path="/admin/banner" element={<BannerAdmin />} />
             <Route path="/admin/banner/new" element={<AddBanner />} />
             <Route path="/admin/banner/edit/:id" element={<EditBanner />} />
+            <Route path="/admin/orders" element={<OrderAdmin />} />
+
+            <Route path="*" element={<Navigate to="/admin" replace />} />
           </Routes>
         </AdminLayout>
         <Toaster />

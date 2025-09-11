@@ -5,8 +5,8 @@ import { createUploadLink } from "apollo-upload-client";
 
 // GraphQL endpoint with upload support
 const uploadLink = createUploadLink({
-    uri: "https://ecommerce-backend-j210.onrender.com/graphql",
-    // uri: "http://localhost:4000/graphql",
+    // uri: "https://ecommerce-backend-j210.onrender.com/graphql",
+    uri: "http://localhost:4000/graphql",
 });
 
 // Auth link

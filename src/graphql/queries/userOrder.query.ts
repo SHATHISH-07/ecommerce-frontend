@@ -23,7 +23,7 @@ export const GET_USER_ORDERS = gql`
 `
 
 export const GET_USER_ORDER_BY_ID = gql`
-   query GetOrderById($orderId: String!){
+    query GetOrderById($orderId: String!){
         getOrderById(orderId: $orderId) {
             id
             products {
@@ -42,5 +42,51 @@ export const GET_USER_ORDER_BY_ID = gql`
             deliveredAt
         }
     }
+`;
+
+export const GET_ALL_ORDERS = gql`
+    query{
+        getAllOrdersAdmin {
+            id
+            userId
+            products {
+                externalProductId
+                title
+                thumbnail
+                priceAtPurchase
+                quantity
+                returnPolicy
+                returnExpiresAt
+            }
+            orderStatus
+            paymentMethod
+            paymentStatus
+            totalAmount
+            deliveredAt
+        }
+    }
+`;
+
+export const GET_USER_ORDER_BY_STATUS = gql`
+    query($status: OrderStatus!){
+        getUserOrderByStatus(status: $status) {
+            id
+            userId
+            products {
+                externalProductId
+                title
+                thumbnail
+                priceAtPurchase
+                quantity
+                returnPolicy
+                returnExpiresAt
+            }
+            orderStatus
+            paymentMethod
+            paymentStatus
+            totalAmount
+            deliveredAt
+    }
+}
 `;
 

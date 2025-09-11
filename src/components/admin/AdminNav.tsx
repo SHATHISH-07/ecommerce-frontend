@@ -20,6 +20,8 @@ import { useDispatch } from "react-redux";
 
 const sidebarItems = [
   { label: "Dashboard", icon: LayoutDashboard, to: "/admin" },
+  { label: "Users", icon: Users, to: "/admin/users" },
+  { label: "Orders", icon: ShoppingBag, to: "/admin/orders" },
   {
     label: "Products",
     icon: Package,
@@ -38,8 +40,6 @@ const sidebarItems = [
       { label: "Bulk Add Category", to: "/admin/categories/new/bulk" },
     ],
   },
-  { label: "Users", icon: Users, to: "/admin/users" },
-  { label: "Orders", icon: ShoppingBag, to: "/admin/orders" },
   {
     label: "Banner",
     icon: TicketCheck,

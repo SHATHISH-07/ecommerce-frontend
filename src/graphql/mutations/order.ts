@@ -41,3 +41,30 @@ export const RETURN_ORDER = gql`
   }
 }
 `;
+
+export const UPDATE_USER_ORDER_STATUS = gql`
+  mutation UpdateUserOrderStatus($orderId: String!, $newStatus: OrderStatus!) {
+    updateUserOrderStatus(orderId: $orderId, newStatus: $newStatus) {
+      message
+      success
+    }
+  }
+`;
+
+export const INITIATE_REFUND = gql`
+  mutation InitiateRefund($orderId: String!) {
+    initiateRefundOrder(orderId: $orderId) {
+      message
+      success
+    }
+  }
+`;
+
+export const CONFIRM_REFUND = gql`
+  mutation ConfirmRefundOrder($orderId: String!) {
+    confirmRefundOrder(orderId: $orderId) {
+      message
+      success
+    }
+  }
+`;
