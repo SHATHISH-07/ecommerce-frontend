@@ -1,4 +1,4 @@
-import { useApolloClient, useQuery } from "@apollo/client";
+import { useApolloClient, useMutation, useQuery } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector, type RootState } from "../../app/store";
 
@@ -7,12 +7,20 @@ import LoadingSpinner from "../../components/products/LoadingSpinner";
 import { AlertTriangle, ShoppingCart } from "lucide-react";
 import CartProduct from "../../components/cart/CartProduct";
 import { checkUserStatus } from "../../utils/checkUserStatus";
+import { CLEAR_CART } from "../../graphql/mutations/cart";
+import { useAppToast } from "../../utils/useAppToast";
 
 const Cart = () => {
   const navigate = useNavigate();
   const user = useAppSelector((state: RootState) => state.user.user);
 
   const client = useApolloClient();
+
+  const { toastSuccess, toastError } = useAppToast();
+
+  const [clearCartItems, { loading: clearing }] = useMutation(CLEAR_CART, {
+    refetchQueries: [{ query: GET_USER_CART }],
+  });
 
   const { data, loading, error } = useQuery(GET_USER_CART, {
     fetchPolicy: "cache-and-network",
@@ -25,6 +33,22 @@ const Cart = () => {
     if (!valid) return;
 
     await navigate("/cart-checkout", { replace: true });
+  };
+
+  const handleClearCart = async () => {
+    try {
+      const res = await clearCartItems();
+      if (res.data?.clearCartItems?.success) {
+        toastSuccess("Cart cleared successfully");
+      } else {
+        toastError(res.data?.clearCartItems?.message || "Error clearing cart");
+      }
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Unexpected error clearing cart";
+      console.error(message);
+      toastError(message);
+    }
   };
 
   if (loading)
@@ -58,16 +82,30 @@ const Cart = () => {
     <div>
       {cartProducts.length > 0 ? (
         <>
-          <div className="p-4">
-            <h1 className="text-4xl font-normal text-gray-800 dark:text-gray-300">
-              <span className="flex items-center gap-2">
-                <ShoppingCart size={32} />
-                Your Cart
-              </span>
-            </h1>
-            <p className="text-gray-800 dark:text-gray-400">
-              Save your favorite items here.
-            </p>
+          <div className="flex justify-between p-4">
+            <div>
+              <h1 className="text-4xl font-normal text-gray-800 dark:text-gray-300">
+                <span className="flex items-center gap-2">
+                  <ShoppingCart size={32} />
+                  Your Cart
+                </span>
+              </h1>
+              <p className="text-gray-800 dark:text-gray-400">
+                Save your favorite items here.
+              </p>
+            </div>
+            <div className="flex items-center">
+              <button
+                onClick={handleClearCart}
+                className={`bg-gradient-to-r from-[#c9812f] to-blue-500 text-white rounded-lg shadow transition cursor-pointer py-2 px-4 font-semibold ${
+                  clearing
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:opacity-90"
+                }`}
+              >
+                {clearing ? "Clearing..." : "Clear Cart"}
+              </button>
+            </div>
           </div>
           <div className="grid grid-cols-1 [@media(min-width:420px)_and_(max-width:639px)]:grid-cols-2 sm:grid-cols-2 lg:grid-cols-1 ">
             {cartProducts.map(

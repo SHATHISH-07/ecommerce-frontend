@@ -18,3 +18,12 @@ export const REMOVE_CART_ITEM = gql`
     }
   }
 `;
+
+export const CLEAR_CART = gql`
+mutation ClearCartItems{
+  clearCartItems {
+    message
+    success
+  }
+}
+`;
