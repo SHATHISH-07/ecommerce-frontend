@@ -212,7 +212,7 @@ const OrderAdmin = () => {
           <select
             value={selectedStatus}
             onChange={(e) => handleFilterByStatus(e.target.value)}
-            className="border rounded px-3 py-2"
+            className="border rounded px-3 py-2 bg-gray-50 dark:bg-[#242424] cursor-pointer"
           >
             <option value="ALL">All Orders</option>
             <option value="Processing">Processing</option>
@@ -237,7 +237,7 @@ const OrderAdmin = () => {
       {/* Orders Table */}
       <div className="overflow-x-auto">
         <table className="min-w-[1000px] border border-gray-200 rounded-lg overflow-hidden">
-          <thead className="bg-gray-100">
+          <thead className="bg-gray-100 dark:bg-[#242424]">
             <tr>
               <th className="p-3 text-left">Order ID</th>
               <th className="p-3 text-left">User ID</th>
@@ -250,7 +250,10 @@ const OrderAdmin = () => {
           </thead>
           <tbody>
             {orders.map((order: UserOrder) => (
-              <tr key={order.id} className="border-t hover:bg-gray-50">
+              <tr
+                key={order.id}
+                className="border-t hover:bg-gray-50 dark:hover:bg-[#242424]"
+              >
                 <td className="p-3 font-medium">{order.id}</td>
                 <td className="p-3">{order.userId}</td>
                 <td className="p-3">
@@ -275,9 +278,9 @@ const OrderAdmin = () => {
                   {order.paymentMethod} ({order.paymentStatus})
                 </td>
                 <td className="p-3">{order.orderStatus}</td>
-                <td className="p-3 flex flex-col gap-2">
+                <td className="p-3 flex flex-col gap-2 ">
                   <select
-                    className="border rounded px-2 py-1"
+                    className="border rounded px-2 py-1 cursor-pointer bg-gray-50 dark:bg-[#242424]"
                     onChange={(e) =>
                       handleUpdateStatus(order.id, e.target.value)
                     }
